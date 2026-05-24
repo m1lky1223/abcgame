@@ -115,6 +115,13 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
           }}>
             🎪 CARNIVAL
           </button>
+          <button onClick={() => onStartMode('dance')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #2ecc71, #27ae60)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            💃 DANCE ACADEMY
+          </button>
         </div>
       </div>
 
