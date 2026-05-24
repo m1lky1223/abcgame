@@ -1,0 +1,10 @@
+{
+  "name": "abcgame-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server for ABC World educational alphabet game",
+  "main": "index.js",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0"
+  }
+}

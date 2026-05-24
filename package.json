@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "tsc --noEmit",
     "test": "vitest run",
-    "test:smoke": "npx vite --port 5173 & sleep 3 && node smoke-test.mjs && kill %1"
+    "test:smoke": "npx vite --port 5173 & sleep 3 && node smoke-test.mjs && kill %1",
+    "mcp": "node mcp-server/index.js"
   },
   "dependencies": {
     "react": "^19.1.0",
