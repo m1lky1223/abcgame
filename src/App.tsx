@@ -55,6 +55,7 @@ export default function App() {
       if (mode === 'free') return { title: 'You Win! 🎉', subtitle: 'You collected all 26 letters first!' }
       if (mode === 'survival' || mode === 'defense') return { title: 'You Win! 🎉', subtitle: `Final score: ${gameState.score}` }
       if (mode === 'angry') return { title: 'All 26 Destroyed! 🎉', subtitle: `Ammo used: ${30 - (gameState.ammoLeft ?? 0)} / 30` }
+      if (mode === 'rescue') return { title: 'All Letters Rescued! 🏆', subtitle: `Score: ${gameState.score}  |  Rooms cleared: ${gameState.totalLevels}` }
       return { title: 'You Win! 🎉', subtitle: `Score: ${gameState.score}` }
     }
     if (mode === 'angry') return { title: 'Out of Ammo! 💣', subtitle: `Letters destroyed: ${gameState.score}/26` }
