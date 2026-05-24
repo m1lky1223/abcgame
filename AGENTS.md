@@ -46,6 +46,8 @@ Educational alphabet game for ages 4+. Three IP pillars: **Alphabet Lore**, **Zo
 | **Chef Kitchen** | 👨‍🍳 Cook recipes by finding the right letters. |
 | **Detective** | 🔍 Solve letter-based mysteries. |
 | **Zombie School** | 📚 Survive lessons while zombies chase. |
+| **Pirate Hunt** | 🏴‍☠️ Zombie pirates search for alphabet treasure. Pop the right letter chests! |
+| **Circus** | 🎪 Ringmaster the circus! 7 acts with zombie acrobats and Oddbods. |
 
 ## Architecture (current + planned)
 

@@ -61,6 +61,8 @@ export default function App() {
       if (mode === 'chef') return { title: 'All Recipes Cooked! 👨‍🍳', subtitle: `Score: ${gameState.score}` }
       if (mode === 'detective') return { title: 'All Cases Solved! 🕵️', subtitle: `Score: ${gameState.score}` }
       if (mode === 'zombieSchool') return { title: 'Graduated! 🎓', subtitle: `Score: ${gameState.score}` }
+      if (mode === 'pirate') return { title: 'Pirate King! 🏴‍☠️', subtitle: `All 26 treasures found! Score: ${gameState.score}` }
+      if (mode === 'circus') return { title: 'Grand Finale! 🎪', subtitle: `All 7 acts completed! Score: ${gameState.score}` }
       return { title: 'You Win! 🎉', subtitle: `Score: ${gameState.score}` }
     }
     if (mode === 'angry') return { title: 'Out of Ammo! 💣', subtitle: `Letters destroyed: ${gameState.score}/26` }

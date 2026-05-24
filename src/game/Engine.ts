@@ -15,9 +15,11 @@ import { MemoryMatchMode } from './MemoryMatchMode'
 import { ChefKitchenMode } from './ChefKitchenMode'
 import { DetectiveMode } from './DetectiveMode'
 import { ZombieSchoolMode } from './ZombieSchoolMode'
+import { PirateHuntMode } from './PirateHuntMode'
+import { CircusMode } from './CircusMode'
 import { WordEntry } from './words'
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus'
 
 export const WIN_SCORE = 26
 
@@ -56,6 +58,8 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameM
     chef: ChefKitchenMode,
     detective: DetectiveMode,
     zombieSchool: ZombieSchoolMode,
+    pirate: PirateHuntMode,
+    circus: CircusMode,
   }
 
   const Inner = modeMap[mode]

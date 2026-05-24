@@ -175,6 +175,20 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
           }}>
             📚 ZOMBIE SCHOOL
           </button>
+          <button onClick={() => onStartMode('pirate')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #8B4513, #D2691E)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🏴‍☠️ PIRATE HUNT
+          </button>
+          <button onClick={() => onStartMode('circus')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🎪 CIRCUS
+          </button>
         </div>
       </div>
 
