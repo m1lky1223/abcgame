@@ -56,6 +56,11 @@ export default function App() {
       if (mode === 'survival' || mode === 'defense') return { title: 'You Win! 🎉', subtitle: `Final score: ${gameState.score}` }
       if (mode === 'angry') return { title: 'All 26 Destroyed! 🎉', subtitle: `Ammo used: ${30 - (gameState.ammoLeft ?? 0)} / 30` }
       if (mode === 'rescue') return { title: 'All Letters Rescued! 🏆', subtitle: `Score: ${gameState.score}  |  Rooms cleared: ${gameState.totalLevels}` }
+      if (mode === 'balloon') return { title: 'All Balloons Popped! 🎈', subtitle: `Score: ${gameState.score}` }
+      if (mode === 'memory') return { title: 'All Pairs Matched! 🧠', subtitle: `Score: ${gameState.score}` }
+      if (mode === 'chef') return { title: 'All Recipes Cooked! 👨‍🍳', subtitle: `Score: ${gameState.score}` }
+      if (mode === 'detective') return { title: 'All Cases Solved! 🕵️', subtitle: `Score: ${gameState.score}` }
+      if (mode === 'zombieSchool') return { title: 'Graduated! 🎓', subtitle: `Score: ${gameState.score}` }
       return { title: 'You Win! 🎉', subtitle: `Score: ${gameState.score}` }
     }
     if (mode === 'angry') return { title: 'Out of Ammo! 💣', subtitle: `Letters destroyed: ${gameState.score}/26` }

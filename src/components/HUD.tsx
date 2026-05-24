@@ -63,6 +63,14 @@ export default function HUD({ state }: HUDProps) {
       )
       rightContent = null
       break
+    case 'balloon':
+    case 'memory':
+    case 'chef':
+    case 'detective':
+    case 'zombieSchool':
+      leftContent = null
+      rightContent = null
+      break
   }
 
   return (

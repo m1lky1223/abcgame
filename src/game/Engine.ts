@@ -9,6 +9,11 @@ import { CarnivalMode } from './CarnivalMode'
 import { DanceAcademyMode } from './DanceAcademyMode'
 import { LetterRunnerMode } from './LetterRunnerMode'
 import { EvolutionLabMode } from './EvolutionLabMode'
+import { BalloonPopMode } from './BalloonPopMode'
+import { MemoryMatchMode } from './MemoryMatchMode'
+import { ChefKitchenMode } from './ChefKitchenMode'
+import { DetectiveMode } from './DetectiveMode'
+import { ZombieSchoolMode } from './ZombieSchoolMode'
 import { ALL_LETTERS } from '../characters/data'
 import { WORDS, WordEntry } from './words'
 
@@ -21,7 +26,7 @@ interface Chaser {
   containsPoint(mx: number, my: number): boolean
 }
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool'
 
 export const WIN_SCORE = 26
 
@@ -77,6 +82,11 @@ export class Engine {
   private danceMode: DanceAcademyMode | null = null
   private runnerMode: LetterRunnerMode | null = null
   private labMode: EvolutionLabMode | null = null
+  private balloonMode: BalloonPopMode | null = null
+  private memoryMode: MemoryMatchMode | null = null
+  private chefMode: ChefKitchenMode | null = null
+  private detectiveMode: DetectiveMode | null = null
+  private zombieSchoolMode: ZombieSchoolMode | null = null
 
   state: GameState = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: 'free', wordsCompleted: 0, oddScore: 0, winner: null }
   onStateChange?: (state: GameState) => void
@@ -153,6 +163,48 @@ export class Engine {
         this.state.winner = s.winner ? 'human' : null
         this.onStateChange?.(this.state)
       }
+    } else if (this.mode === 'balloon') {
+      this.balloonMode = new BalloonPopMode(this.canvas.width, this.canvas.height)
+      this.balloonMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.currentLevel = s.wave
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'memory') {
+      this.memoryMode = new MemoryMatchMode(this.canvas.width, this.canvas.height)
+      this.memoryMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.matched
+        this.state.currentLevel = s.round
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'chef') {
+      this.chefMode = new ChefKitchenMode(this.canvas.width, this.canvas.height)
+      this.chefMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.recipesDone
+        this.state.currentLevel = s.recipesDone
+        this.state.totalLevels = s.totalRecipes
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'detective') {
+      this.detectiveMode = new DetectiveMode(this.canvas.width, this.canvas.height)
+      this.detectiveMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.solved
+        this.state.currentLevel = s.solved
+        this.state.totalLevels = s.totalCases
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'zombieSchool') {
+      this.zombieSchoolMode = new ZombieSchoolMode(this.canvas.width, this.canvas.height)
+      this.zombieSchoolMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.lesson
+        this.state.currentLevel = s.lesson
+        this.state.totalLevels = s.totalLessons
+        this.onStateChange?.(this.state)
+      }
     } else this.spawnInitialLetters()
     this.running = true
     this.loop()
@@ -184,6 +236,11 @@ export class Engine {
     this.danceMode = null
     this.runnerMode = null
     this.labMode = null
+    this.balloonMode = null
+    this.memoryMode = null
+    this.chefMode = null
+    this.detectiveMode = null
+    this.zombieSchoolMode = null
     this.state = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: this.mode, wordsCompleted: 0, oddScore: 0, winner: null }
     this.currentWordIndex = -1
     this.currentWord = null
@@ -246,6 +303,48 @@ export class Engine {
         this.state.totalCollected = s.evolutions
         this.state.currentLevel = s.dna
         this.state.winner = s.winner ? 'human' : null
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'balloon') {
+      this.balloonMode = new BalloonPopMode(this.canvas.width, this.canvas.height)
+      this.balloonMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.currentLevel = s.wave
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'memory') {
+      this.memoryMode = new MemoryMatchMode(this.canvas.width, this.canvas.height)
+      this.memoryMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.matched
+        this.state.currentLevel = s.round
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'chef') {
+      this.chefMode = new ChefKitchenMode(this.canvas.width, this.canvas.height)
+      this.chefMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.recipesDone
+        this.state.currentLevel = s.recipesDone
+        this.state.totalLevels = s.totalRecipes
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'detective') {
+      this.detectiveMode = new DetectiveMode(this.canvas.width, this.canvas.height)
+      this.detectiveMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.solved
+        this.state.currentLevel = s.solved
+        this.state.totalLevels = s.totalCases
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'zombieSchool') {
+      this.zombieSchoolMode = new ZombieSchoolMode(this.canvas.width, this.canvas.height)
+      this.zombieSchoolMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.lesson
+        this.state.currentLevel = s.lesson
+        this.state.totalLevels = s.totalLessons
         this.onStateChange?.(this.state)
       }
     } else this.spawnInitialLetters()
@@ -432,6 +531,79 @@ export class Engine {
         this.labMode?.handleClick(0, 0)
       }
       this.labMode?.update()
+      return
+    }
+
+    if (this.mode === 'balloon') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.balloonMode?.handleClick(cx, cy)
+      }
+      const keys = 'abcdefghijklmnopqrstuvwxyz'
+      for (const key of keys) {
+        if (this.input.wasPressed(key)) {
+          this.balloonMode?.handleKey(key)
+        }
+      }
+      this.balloonMode?.update()
+      return
+    }
+
+    if (this.mode === 'memory') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.memoryMode?.handleClick(cx, cy)
+      }
+      this.memoryMode?.update()
+      return
+    }
+
+    if (this.mode === 'chef') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.chefMode?.handleClick(cx, cy)
+      }
+      const keys = 'abcdefghijklmnopqrstuvwxyz'
+      for (const key of keys) {
+        if (this.input.wasPressed(key)) {
+          this.chefMode?.handleKey(key)
+        }
+      }
+      this.chefMode?.update()
+      return
+    }
+
+    if (this.mode === 'detective') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.detectiveMode?.handleClick(cx, cy)
+      }
+      this.detectiveMode?.update()
+      return
+    }
+
+    if (this.mode === 'zombieSchool') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.zombieSchoolMode?.handleClick(cx, cy)
+      }
+      const keys = 'abcdefghijklmnopqrstuvwxyz'
+      for (const key of keys) {
+        if (this.input.wasPressed(key)) {
+          this.zombieSchoolMode?.handleKey(key)
+        }
+      }
+      this.zombieSchoolMode?.update()
       return
     }
 
@@ -752,6 +924,31 @@ export class Engine {
       return
     }
 
+    if (this.mode === 'balloon') {
+      this.balloonMode?.draw(ctx)
+      return
+    }
+
+    if (this.mode === 'memory') {
+      this.memoryMode?.draw(ctx)
+      return
+    }
+
+    if (this.mode === 'chef') {
+      this.chefMode?.draw(ctx)
+      return
+    }
+
+    if (this.mode === 'detective') {
+      this.detectiveMode?.draw(ctx)
+      return
+    }
+
+    if (this.mode === 'zombieSchool') {
+      this.zombieSchoolMode?.draw(ctx)
+      return
+    }
+
     for (const letter of this.letters) letter.draw(ctx, this.frame)
     for (const chaser of this.chasers) chaser.draw(ctx)
 
@@ -820,6 +1017,11 @@ export class Engine {
       case 'dance':
       case 'runner':
       case 'lab':
+      case 'balloon':
+      case 'memory':
+      case 'chef':
+      case 'detective':
+      case 'zombieSchool':
         break
     }
   }

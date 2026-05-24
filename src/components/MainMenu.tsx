@@ -12,7 +12,9 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
     <div style={{
       position: 'absolute', inset: 0,
       display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
+      alignItems: 'center', justifyContent: 'flex-start',
+      paddingTop: 40, paddingBottom: 40,
+      overflowY: 'auto', WebkitOverflowScrolling: 'touch',
       background: 'linear-gradient(135deg, #0b0e17 0%, #1a1a2e 50%, #16213e 100%)',
       zIndex: 10,
     }}>
@@ -135,6 +137,43 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
             color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
           }}>
             🧬 EVOLUTION LAB
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => onStartMode('balloon')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🎈 BALLOON POP
+          </button>
+          <button onClick={() => onStartMode('memory')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #9b59b6, #8e44ad)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🧠 MEMORY MATCH
+          </button>
+          <button onClick={() => onStartMode('chef')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #e67e22, #d35400)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            👨‍🍳 CHEF KITCHEN
+          </button>
+          <button onClick={() => onStartMode('detective')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #3498db, #2980b9)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🔍 DETECTIVE
+          </button>
+          <button onClick={() => onStartMode('zombieSchool')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #1abc9c, #16a085)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            📚 ZOMBIE SCHOOL
           </button>
         </div>
       </div>
