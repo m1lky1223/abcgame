@@ -5,6 +5,60 @@ interface MainMenuProps {
   onStartMode: (mode: GameMode) => void
 }
 
+interface ModeEntry {
+  mode: GameMode
+  label: string
+  gradient: string
+}
+
+const MODE_ROWS: { title: string; modes: ModeEntry[] }[] = [
+  {
+    title: 'Core',
+    modes: [
+      { mode: 'free', label: '🎈 FREE POP', gradient: 'linear-gradient(135deg, #58d68d, #2ecc71)' },
+      { mode: 'word', label: '📖 WORD POP', gradient: 'linear-gradient(135deg, #5dade2, #3498db)' },
+      { mode: 'survival', label: '❤️ SURVIVAL', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'timeattack', label: '⏱️ TIME ATTACK', gradient: 'linear-gradient(135deg, #f5b041, #e67e22)' },
+      { mode: 'wordrace', label: '🔤 WORD RACE', gradient: 'linear-gradient(135deg, #af7ac5, #8e44ad)' },
+      { mode: 'defense', label: '🛡️ DEFENSE', gradient: 'linear-gradient(135deg, #1abc9c, #16a085)' },
+    ],
+  },
+  {
+    title: 'Arcade',
+    modes: [
+      { mode: 'angry', label: '🐦 ODD BIRDS', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'rescue', label: '🏚️ RESCUE', gradient: 'linear-gradient(135deg, #8e44ad, #6c3483)' },
+      { mode: 'carnival', label: '🎪 CARNIVAL', gradient: 'linear-gradient(135deg, #e67e22, #d35400)' },
+      { mode: 'dance', label: '💃 DANCE ACADEMY', gradient: 'linear-gradient(135deg, #2ecc71, #27ae60)' },
+      { mode: 'runner', label: '🏃 RUNNER', gradient: 'linear-gradient(135deg, #3498db, #2980b9)' },
+      { mode: 'lab', label: '🧬 EVOLUTION LAB', gradient: 'linear-gradient(135deg, #2ecc71, #1abc9c)' },
+    ],
+  },
+  {
+    title: 'Mini-Games',
+    modes: [
+      { mode: 'balloon', label: '🎈 BALLOON POP', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'memory', label: '🧠 MEMORY MATCH', gradient: 'linear-gradient(135deg, #9b59b6, #8e44ad)' },
+      { mode: 'chef', label: '👨‍🍳 CHEF KITCHEN', gradient: 'linear-gradient(135deg, #e67e22, #d35400)' },
+      { mode: 'detective', label: '🔍 DETECTIVE', gradient: 'linear-gradient(135deg, #3498db, #2980b9)' },
+      { mode: 'zombieSchool', label: '📚 ZOMBIE SCHOOL', gradient: 'linear-gradient(135deg, #1abc9c, #16a085)' },
+      { mode: 'pirate', label: '🏴‍☠️ PIRATE HUNT', gradient: 'linear-gradient(135deg, #8B4513, #D2691E)' },
+      { mode: 'circus', label: '🎪 CIRCUS', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'shooting', label: '🎯 SHOOTING GALLERY', gradient: 'linear-gradient(135deg, #2c3e50, #34495e)' },
+      { mode: 'pizza', label: '🍕 PIZZA DELIVERY', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'construction', label: '🏗️ CONSTRUCTION', gradient: 'linear-gradient(135deg, #f5b041, #e67e22)' },
+      { mode: 'mail', label: '📬 MAIL CARRIERS', gradient: 'linear-gradient(135deg, #5dade2, #3498db)' },
+      { mode: 'garden', label: '🌸 ALPHABET GARDEN', gradient: 'linear-gradient(135deg, #58d68d, #2ecc71)' },
+      { mode: 'fire', label: '🚒 FIREFIGHTERS', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'doctor', label: '🏥 ZOMBIE DOCTOR', gradient: 'linear-gradient(135deg, #1abc9c, #16a085)' },
+      { mode: 'train', label: '🚂 ALPHABET TRAIN', gradient: 'linear-gradient(135deg, #9b59b6, #8e44ad)' },
+      { mode: 'space', label: '🚀 SPACE EXPLORERS', gradient: 'linear-gradient(135deg, #2c3e50, #34495e)' },
+      { mode: 'bakery', label: '🧁 ZOMBIE BAKERY', gradient: 'linear-gradient(135deg, #e67e22, #d35400)' },
+      { mode: 'aquarium', label: '🐠 ALPHABET AQUARIUM', gradient: 'linear-gradient(135deg, #5dade2, #2980b9)' },
+    ],
+  },
+]
+
 export default function MainMenu({ onStartMode }: MainMenuProps) {
   const previews = ['A', 'B', 'C', 'D', 'E']
 
@@ -48,155 +102,31 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
         })}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => onStartMode('free')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #58d68d, #2ecc71)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🎈 FREE POP
-          </button>
-          <button onClick={() => onStartMode('word')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #5dade2, #3498db)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            📖 WORD POP
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => onStartMode('survival')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            ❤️ SURVIVAL
-          </button>
-          <button onClick={() => onStartMode('timeattack')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #f5b041, #e67e22)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            ⏱️ TIME ATTACK
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => onStartMode('wordrace')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #af7ac5, #8e44ad)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🔤 WORD RACE
-          </button>
-          <button onClick={() => onStartMode('defense')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #1abc9c, #16a085)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🛡️ DEFENSE
-          </button>
-          <button onClick={() => onStartMode('angry')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🐦 ODD BIRDS
-          </button>
-          <button onClick={() => onStartMode('rescue')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #8e44ad, #6c3483)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🏚️ RESCUE
-          </button>
-          <button onClick={() => onStartMode('carnival')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e67e22, #d35400)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🎪 CARNIVAL
-          </button>
-          <button onClick={() => onStartMode('dance')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #2ecc71, #27ae60)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            💃 DANCE ACADEMY
-          </button>
-          <button onClick={() => onStartMode('runner')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #3498db, #2980b9)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🏃 RUNNER
-          </button>
-          <button onClick={() => onStartMode('lab')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #2ecc71, #1abc9c)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🧬 EVOLUTION LAB
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => onStartMode('balloon')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🎈 BALLOON POP
-          </button>
-          <button onClick={() => onStartMode('memory')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #9b59b6, #8e44ad)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🧠 MEMORY MATCH
-          </button>
-          <button onClick={() => onStartMode('chef')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e67e22, #d35400)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            👨‍🍳 CHEF KITCHEN
-          </button>
-          <button onClick={() => onStartMode('detective')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #3498db, #2980b9)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🔍 DETECTIVE
-          </button>
-          <button onClick={() => onStartMode('zombieSchool')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #1abc9c, #16a085)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            📚 ZOMBIE SCHOOL
-          </button>
-          <button onClick={() => onStartMode('pirate')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #8B4513, #D2691E)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🏴‍☠️ PIRATE HUNT
-          </button>
-          <button onClick={() => onStartMode('circus')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e74c5c, #c0392b)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🎪 CIRCUS
-          </button>
-          <button onClick={() => onStartMode('shooting')} style={{
-            padding: '12px 30px', fontSize: 16, fontWeight: 700,
-            background: 'linear-gradient(135deg, #2c3e50, #34495e)',
-            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
-          }}>
-            🎯 SHOOTING GALLERY
-          </button>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', width: '100%', maxWidth: 700 }}>
+        {MODE_ROWS.map(section => (
+          <div key={section.title} style={{ width: '100%' }}>
+            <h2 style={{
+              color: '#8899bb', fontSize: 13, fontWeight: 700,
+              letterSpacing: 2, textTransform: 'uppercase',
+              marginBottom: 8, paddingLeft: 4,
+            }}>
+              {section.title}
+            </h2>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {section.modes.map(m => (
+                <button key={m.mode} onClick={() => onStartMode(m.mode)} style={{
+                  flex: '1 0 auto',
+                  padding: '10px 20px', fontSize: 14, fontWeight: 700,
+                  background: m.gradient,
+                  color: '#fff', border: 'none', borderRadius: 12,
+                  letterSpacing: 0.5, cursor: 'pointer',
+                }}>
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div style={{ marginTop: 36, color: '#556688', fontSize: 12, textAlign: 'center', lineHeight: 2 }}>

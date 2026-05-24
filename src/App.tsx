@@ -64,6 +64,16 @@ export default function App() {
       if (mode === 'pirate') return { title: 'Pirate King! 🏴‍☠️', subtitle: `All 26 treasures found! Score: ${gameState.score}` }
       if (mode === 'circus') return { title: 'Grand Finale! 🎪', subtitle: `All 7 acts completed! Score: ${gameState.score}` }
       if (mode === 'shooting') return { title: 'All Letters Rescued! 🎯', subtitle: `Score: ${gameState.score}  |  Waves cleared: ${gameState.currentLevel ?? 26}` }
+      if (mode === 'pizza') return { title: 'Pizza Party! 🍕', subtitle: `All 26 pizzas served! Score: ${gameState.score}` }
+      if (mode === 'construction') return { title: 'Grand Opening! 🏗️', subtitle: `All 26 structures built! Score: ${gameState.score}` }
+      if (mode === 'mail') return { title: 'Master Mail Carrier! 📬', subtitle: `All 26 letters delivered! Score: ${gameState.score}` }
+      if (mode === 'garden') return { title: 'Garden in Full Bloom! 🌸', subtitle: `All 26 plants grown! Score: ${gameState.score}` }
+      if (mode === 'fire') return { title: 'Heroes of the Day! 🚒', subtitle: `All 26 fires extinguished! Score: ${gameState.score}` }
+      if (mode === 'doctor') return { title: 'Doctor of the Year! 🏆', subtitle: `All 26 patients cured! Score: ${gameState.score}` }
+      if (mode === 'train') return { title: 'All Aboard! 🚂', subtitle: `Full alphabet train! Score: ${gameState.score}` }
+      if (mode === 'space') return { title: 'Galactic Explorer! 🌌', subtitle: `All 26 discoveries made! Score: ${gameState.score}` }
+      if (mode === 'bakery') return { title: 'Master Baker! 🎂', subtitle: `All 26 treats served! Score: ${gameState.score}` }
+      if (mode === 'aquarium') return { title: 'Ocean Explorer! 🐳', subtitle: `All 26 creatures discovered! Score: ${gameState.score}` }
       return { title: 'You Win! 🎉', subtitle: `Score: ${gameState.score}` }
     }
     if (mode === 'angry') return { title: 'Out of Ammo! 💣', subtitle: `Letters destroyed: ${gameState.score}/26` }

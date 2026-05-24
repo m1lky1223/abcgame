@@ -71,6 +71,16 @@ export default function HUD({ state }: HUDProps) {
     case 'pirate':
     case 'circus':
     case 'shooting':
+    case 'pizza':
+    case 'construction':
+    case 'mail':
+    case 'garden':
+    case 'fire':
+    case 'doctor':
+    case 'train':
+    case 'space':
+    case 'bakery':
+    case 'aquarium':
       leftContent = null
       rightContent = null
       break

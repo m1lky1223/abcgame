@@ -18,9 +18,19 @@ import { ZombieSchoolMode } from './ZombieSchoolMode'
 import { PirateHuntMode } from './PirateHuntMode'
 import { CircusMode } from './CircusMode'
 import { ShootingGalleryMode } from './ShootingGalleryMode'
+import { PizzaDeliveryMode } from './PizzaDeliveryMode'
+import { ConstructionSiteMode } from './ConstructionSiteMode'
+import { MailCarriersMode } from './MailCarriersMode'
+import { GardenMode } from './GardenMode'
+import { FireFightersMode } from './FireFightersMode'
+import { DoctorMode } from './DoctorMode'
+import { TrainMode } from './TrainMode'
+import { SpaceExplorersMode } from './SpaceExplorersMode'
+import { BakeryMode } from './BakeryMode'
+import { AquariumMode } from './AquariumMode'
 import { WordEntry } from './words'
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting' | 'pizza' | 'construction' | 'mail' | 'garden' | 'fire' | 'doctor' | 'train' | 'space' | 'bakery' | 'aquarium'
 
 export const WIN_SCORE = 26
 
@@ -62,6 +72,16 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameM
     pirate: PirateHuntMode,
     circus: CircusMode,
     shooting: ShootingGalleryMode,
+    pizza: PizzaDeliveryMode,
+    construction: ConstructionSiteMode,
+    mail: MailCarriersMode,
+    garden: GardenMode,
+    fire: FireFightersMode,
+    doctor: DoctorMode,
+    train: TrainMode,
+    space: SpaceExplorersMode,
+    bakery: BakeryMode,
+    aquarium: AquariumMode,
   }
 
   const Inner = modeMap[mode]
