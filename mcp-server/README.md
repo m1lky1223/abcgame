@@ -1,6 +1,6 @@
 # ABC World MCP Server
 
-MCP server for the ABC World educational alphabet game. Exposes game data and instructions to AI assistants like Claude.
+MCP server for ABC World educational alphabet game. Exposes 6 tools for AI assistants.
 
 ## Tools
 
@@ -9,51 +9,54 @@ MCP server for the ABC World educational alphabet game. Exposes game data and in
 | `list_game_modes` | List all 30 game modes (optional `category` filter: Core, Arcade, Mini-Game) |
 | `get_character` | Get info for a single letter character |
 | `list_characters` | List all characters (optional `role` filter: hero, ally, enemy) |
-| `get_word` | Get a random word or search by starting letter |
+| `get_word` | Get a random word puzzle or search by starting letter |
 | `get_mode_instructions` | Get detailed how-to-play instructions for a game mode |
 | `get_game_info` | Get overall game info (stats, tech stack, character counts) |
 
 ## Setup
 
-### 1. Install dependencies
-
 ```bash
 cd mcp-server && npm install
 ```
 
-### 2. Connect to Claude Desktop
-
-Add to your Claude Desktop config (`~/.config/Claude/claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "abcgame": {
-      "command": "node",
-      "args": ["/absolute/path/to/abcgame/mcp-server/index.js"],
-      "env": {}
-    }
-  }
-}
-```
-
-Or via `opencode.json` if using opencode:
-
-```json
-{
-  "mcpServers": {
-    "abcgame": {
-      "command": "node",
-      "args": ["mcp-server/index.js"]
-    }
-  }
-}
-```
-
-### 3. Test
+## Run (HTTP server for remote access)
 
 ```bash
-npm run mcp
-# or
-node mcp-server/index.js
+PORT=3001 node index.js
+```
+
+Server listens on `http://0.0.0.0:3001/mcp` with health check at `/health`.
+
+## Deploy to the cloud
+
+Deploy as a Node.js app to any platform (Railway, Render, Fly.io, etc.):
+
+```bash
+PORT=8080 node mcp-server/index.js
+```
+
+## Connect Claude to a remote MCP URL
+
+In your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "abcgame": {
+      "url": "https://your-deployed-url.com/mcp"
+    }
+  }
+}
+```
+
+Or via `opencode.json`:
+
+```json
+{
+  "mcpServers": {
+    "abcgame": {
+      "url": "https://your-deployed-url.com/mcp"
+    }
+  }
+}
 ```

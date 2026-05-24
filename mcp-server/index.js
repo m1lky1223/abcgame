@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js"
+import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js"
 import { z } from "zod"
 
 const MODES = [
@@ -162,14 +163,14 @@ const MODE_INSTRUCTIONS = {
   zombieSchool: "A teacher presents a word. Pop the letter shown from the floating options. 26 lessons, one per letter. Recess every 5 lessons.",
   pirate: "Zombie pirates sail in with letter treasure chests. Pop the chests matching the required letter. Collect all 26 treasures.",
   circus: "7 acts with zombie acrobats and Oddbods. Each act has unique letter-based challenges. Complete all acts for the grand finale.",
-  shooting: "Zombies carry letters toward you from the right. Click to shoot. Press R to reload, 1-7 to switch weapons. Collect all 26 letters. Switch between 7 Oddbod shooters each with unique weapons.",
+  shooting: "Zombies carry letters toward you from the right. Click to shoot. Press R to reload, 1-7 to switch weapons. Collect all 26 letters.",
   pizza: "A zombie customer orders a pizza with a missing letter topping. Pop the correct letter topping from the floating options. Serve all 26 orders to win.",
   construction: "A blueprint shows a structure shaped like a letter. Pop the matching letter building material. Build all 26 structures to complete the playground.",
   mail: "An envelope has a word with a missing letter stamp. Pop the correct letter stamp to frank the envelope. Deliver all 26 letters.",
-  garden: "A plant pot has a letter on it. Water droplets float with letters. Pop the matching letter to water the plant. 3 waterings per plant (seed → sprout → bloom). Grow all 26.",
+  garden: "A plant pot has a letter on it. Water droplets float with letters. Pop the matching letter to water the plant. 3 waterings per plant. Grow all 26.",
   fire: "A building is on fire with a flaming word missing a letter. Spray water droplets with the correct letter to extinguish the flames. Save all 26 buildings.",
   doctor: "A zombie patient has a symptom word with a missing letter. Give them the correct letter medicine bottle. Cure all 26 patients.",
-  train: "A train car shows a cargo word with a missing letter. Load the correct letter cargo box onto the train. The train grows longer as you load more. Complete all 26 stops.",
+  train: "A train car shows a cargo word with a missing letter. Load the correct letter cargo box onto the train. Complete all 26 stops.",
   space: "A zombie astronaut receives a space signal with a missing letter. Pop the correct star letter to complete the transmission. Discover all 26 celestial wonders.",
   bakery: "A zombie customer orders a treat with a missing letter. Pop the correct letter pastry from the bakery. Serve all 26 treats.",
   aquarium: "A sea creature name has a missing letter. Pop the correct letter bubble to name the creature. Discover all 26 sea creatures.",
@@ -186,12 +187,7 @@ server.tool(
   async ({ category }) => {
     let modes = MODES
     if (category) modes = modes.filter(m => m.category === category)
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({ count: modes.length, modes }, null, 2),
-      }],
-    }
+    return { content: [{ type: "text", text: JSON.stringify({ count: modes.length, modes }, null, 2) }] }
   },
 )
 
@@ -211,12 +207,7 @@ server.tool(
   async ({ role }) => {
     let chars = CHARACTERS
     if (role) chars = chars.filter(c => c.role === role)
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({ count: chars.length, characters: chars }, null, 2),
-      }],
-    }
+    return { content: [{ type: "text", text: JSON.stringify({ count: chars.length, characters: chars }, null, 2) }] }
   },
 )
 
@@ -227,20 +218,10 @@ server.tool(
     if (letter) {
       const upper = letter.toUpperCase()
       const matched = WORDS.filter(w => w.word.startsWith(upper))
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({ count: matched.length, words: matched.slice(0, 20) }, null, 2),
-        }],
-      }
+      return { content: [{ type: "text", text: JSON.stringify({ count: matched.length, words: matched.slice(0, 20) }, null, 2) }] }
     }
     const random = WORDS[Math.floor(Math.random() * WORDS.length)]
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({ word: random, hint: `${random.word.replace(random.word[random.blankIndex], '_')} ${random.emoji}` }, null, 2),
-      }],
-    }
+    return { content: [{ type: "text", text: JSON.stringify({ word: random, hint: `${random.word.replace(random.word[random.blankIndex], '_')} ${random.emoji}` }, null, 2) }] }
   },
 )
 
@@ -251,12 +232,7 @@ server.tool(
     const mode = MODES.find(m => m.id === mode_id)
     if (!mode) return { content: [{ type: "text", text: JSON.stringify({ error: `Mode '${mode_id}' not found` }) }] }
     const instructions = MODE_INSTRUCTIONS[mode_id] || "No instructions available for this mode."
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({ mode: mode, instructions }, null, 2),
-      }],
-    }
+    return { content: [{ type: "text", text: JSON.stringify({ mode, instructions }, null, 2) }] }
   },
 )
 
@@ -290,5 +266,31 @@ server.tool(
   },
 )
 
-const transport = new StdioServerTransport()
+// Create Express app from MCP SDK (handles DNS rebinding protection)
+const app = createMcpExpressApp({ host: "0.0.0.0" })
+const transport = new StreamableHTTPServerTransport()
+
+// Connect the MCP server to the transport
 await server.connect(transport)
+
+// Handle all MCP requests via POST
+app.post("/mcp", async (req, res) => {
+  await transport.handleRequest(req, res, req.body)
+})
+
+// Handle SSE streams via GET (required for Streamable HTTP transport)
+app.get("/mcp", async (req, res) => {
+  await transport.handleRequest(req, res)
+})
+
+// Health check
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", name: "ABC World Game MCP" })
+})
+
+// Start server
+const PORT = parseInt(process.env.PORT || "3001", 10)
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`ABC World MCP server running on http://0.0.0.0:${PORT}/mcp`)
+  console.log(`Health check: http://0.0.0.0:${PORT}/health`)
+})
