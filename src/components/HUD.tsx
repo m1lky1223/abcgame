@@ -70,6 +70,7 @@ export default function HUD({ state }: HUDProps) {
     case 'zombieSchool':
     case 'pirate':
     case 'circus':
+    case 'shooting':
       leftContent = null
       rightContent = null
       break

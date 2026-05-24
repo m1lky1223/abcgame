@@ -8,6 +8,7 @@ const MODES = [
   '🎪 CARNIVAL', '💃 DANCE ACADEMY', '🏃 RUNNER', '🧬 EVOLUTION LAB',
   '🎈 BALLOON POP', '🧠 MEMORY MATCH', '👨‍🍳 CHEF KITCHEN',
   '🔍 DETECTIVE', '📚 ZOMBIE SCHOOL',
+  '🏴‍☠️ PIRATE HUNT', '🎪 CIRCUS', '🎯 SHOOTING GALLERY',
 ]
 
 async function wait(url, retries = 30) {

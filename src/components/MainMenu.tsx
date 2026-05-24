@@ -189,6 +189,13 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
           }}>
             🎪 CIRCUS
           </button>
+          <button onClick={() => onStartMode('shooting')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #2c3e50, #34495e)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🎯 SHOOTING GALLERY
+          </button>
         </div>
       </div>
 

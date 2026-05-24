@@ -63,11 +63,13 @@ export default function App() {
       if (mode === 'zombieSchool') return { title: 'Graduated! 🎓', subtitle: `Score: ${gameState.score}` }
       if (mode === 'pirate') return { title: 'Pirate King! 🏴‍☠️', subtitle: `All 26 treasures found! Score: ${gameState.score}` }
       if (mode === 'circus') return { title: 'Grand Finale! 🎪', subtitle: `All 7 acts completed! Score: ${gameState.score}` }
+      if (mode === 'shooting') return { title: 'All Letters Rescued! 🎯', subtitle: `Score: ${gameState.score}  |  Waves cleared: ${gameState.currentLevel ?? 26}` }
       return { title: 'You Win! 🎉', subtitle: `Score: ${gameState.score}` }
     }
     if (mode === 'angry') return { title: 'Out of Ammo! 💣', subtitle: `Letters destroyed: ${gameState.score}/26` }
     if (mode === 'survival') return { title: 'Game Over 💀', subtitle: `The OddBods got you! Score: ${gameState.score}` }
     if (mode === 'defense') return { title: 'Defense Breached! 💀', subtitle: `The OddBods broke through! Score: ${gameState.score}` }
+    if (mode === 'shooting') return { title: 'Zombies Overran the Base! 💀', subtitle: `Letters rescued: ${gameState.totalCollected}/26  |  Score: ${gameState.score}` }
     return { title: 'OddBods Win! 😈', subtitle: 'They collected all 26 letters first!' }
   }
 

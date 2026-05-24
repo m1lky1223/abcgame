@@ -17,9 +17,10 @@ import { DetectiveMode } from './DetectiveMode'
 import { ZombieSchoolMode } from './ZombieSchoolMode'
 import { PirateHuntMode } from './PirateHuntMode'
 import { CircusMode } from './CircusMode'
+import { ShootingGalleryMode } from './ShootingGalleryMode'
 import { WordEntry } from './words'
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting'
 
 export const WIN_SCORE = 26
 
@@ -60,6 +61,7 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameM
     zombieSchool: ZombieSchoolMode,
     pirate: PirateHuntMode,
     circus: CircusMode,
+    shooting: ShootingGalleryMode,
   }
 
   const Inner = modeMap[mode]
