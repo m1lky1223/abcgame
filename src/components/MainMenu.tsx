@@ -127,7 +127,14 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
             background: 'linear-gradient(135deg, #3498db, #2980b9)',
             color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
           }}>
-            🏃 LETTER RUNNER
+            🏃 RUNNER
+          </button>
+          <button onClick={() => onStartMode('lab')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #2ecc71, #1abc9c)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🧬 EVOLUTION LAB
           </button>
         </div>
       </div>

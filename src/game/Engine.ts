@@ -8,6 +8,7 @@ import { ZombieRescueMode } from './ZombieRescueMode'
 import { CarnivalMode } from './CarnivalMode'
 import { DanceAcademyMode } from './DanceAcademyMode'
 import { LetterRunnerMode } from './LetterRunnerMode'
+import { EvolutionLabMode } from './EvolutionLabMode'
 import { ALL_LETTERS } from '../characters/data'
 import { WORDS, WordEntry } from './words'
 
@@ -20,7 +21,7 @@ interface Chaser {
   containsPoint(mx: number, my: number): boolean
 }
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab'
 
 export const WIN_SCORE = 26
 
@@ -75,6 +76,7 @@ export class Engine {
   private carnivalMode: CarnivalMode | null = null
   private danceMode: DanceAcademyMode | null = null
   private runnerMode: LetterRunnerMode | null = null
+  private labMode: EvolutionLabMode | null = null
 
   state: GameState = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: 'free', wordsCompleted: 0, oddScore: 0, winner: null }
   onStateChange?: (state: GameState) => void
@@ -142,6 +144,15 @@ export class Engine {
         this.state.winner = s.won ? 'human' : s.gameOver ? 'oddbods' : null
         this.onStateChange?.(this.state)
       }
+    } else if (this.mode === 'lab') {
+      this.labMode = new EvolutionLabMode(this.canvas.width, this.canvas.height)
+      this.labMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.evolutions
+        this.state.currentLevel = s.dna
+        this.state.winner = s.winner ? 'human' : null
+        this.onStateChange?.(this.state)
+      }
     } else this.spawnInitialLetters()
     this.running = true
     this.loop()
@@ -172,6 +183,7 @@ export class Engine {
     this.carnivalMode = null
     this.danceMode = null
     this.runnerMode = null
+    this.labMode = null
     this.state = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: this.mode, wordsCompleted: 0, oddScore: 0, winner: null }
     this.currentWordIndex = -1
     this.currentWord = null
@@ -225,6 +237,15 @@ export class Engine {
         this.state.totalCollected = s.lettersCollected
         this.state.currentLevel = Math.floor(s.distance)
         this.state.winner = s.won ? 'human' : s.gameOver ? 'oddbods' : null
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'lab') {
+      this.labMode = new EvolutionLabMode(this.canvas.width, this.canvas.height)
+      this.labMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.evolutions
+        this.state.currentLevel = s.dna
+        this.state.winner = s.winner ? 'human' : null
         this.onStateChange?.(this.state)
       }
     } else this.spawnInitialLetters()
@@ -391,6 +412,26 @@ export class Engine {
         this.runnerMode?.restart()
       }
       this.runnerMode?.update()
+      return
+    }
+
+    if (this.mode === 'lab') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.labMode?.handleClick(cx, cy)
+      }
+      const keys = 'abcdefghijklmnopqrstuvwxyz'
+      for (const key of keys) {
+        if (this.input.wasPressed(key)) {
+          this.labMode?.handleKey(key)
+        }
+      }
+      if (this.input.wasPressed('l')) {
+        this.labMode?.handleClick(0, 0)
+      }
+      this.labMode?.update()
       return
     }
 
@@ -706,6 +747,11 @@ export class Engine {
       return
     }
 
+    if (this.mode === 'lab') {
+      this.labMode?.draw(ctx)
+      return
+    }
+
     for (const letter of this.letters) letter.draw(ctx, this.frame)
     for (const chaser of this.chasers) chaser.draw(ctx)
 
@@ -773,6 +819,7 @@ export class Engine {
       case 'carnival':
       case 'dance':
       case 'runner':
+      case 'lab':
         break
     }
   }
