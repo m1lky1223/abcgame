@@ -7,6 +7,7 @@ import { AngryMode } from './AngryMode'
 import { ZombieRescueMode } from './ZombieRescueMode'
 import { CarnivalMode } from './CarnivalMode'
 import { DanceAcademyMode } from './DanceAcademyMode'
+import { LetterRunnerMode } from './LetterRunnerMode'
 import { ALL_LETTERS } from '../characters/data'
 import { WORDS, WordEntry } from './words'
 
@@ -19,7 +20,7 @@ interface Chaser {
   containsPoint(mx: number, my: number): boolean
 }
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner'
 
 export const WIN_SCORE = 26
 
@@ -73,6 +74,7 @@ export class Engine {
   private rescueMode: ZombieRescueMode | null = null
   private carnivalMode: CarnivalMode | null = null
   private danceMode: DanceAcademyMode | null = null
+  private runnerMode: LetterRunnerMode | null = null
 
   state: GameState = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: 'free', wordsCompleted: 0, oddScore: 0, winner: null }
   onStateChange?: (state: GameState) => void
@@ -131,6 +133,15 @@ export class Engine {
         this.state.totalLevels = 7
         this.onStateChange?.(this.state)
       }
+    } else if (this.mode === 'runner') {
+      this.runnerMode = new LetterRunnerMode(this.canvas.width, this.canvas.height)
+      this.runnerMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.lettersCollected
+        this.state.currentLevel = Math.floor(s.distance)
+        this.state.winner = s.won ? 'human' : s.gameOver ? 'oddbods' : null
+        this.onStateChange?.(this.state)
+      }
     } else this.spawnInitialLetters()
     this.running = true
     this.loop()
@@ -160,6 +171,7 @@ export class Engine {
     this.rescueMode = null
     this.carnivalMode = null
     this.danceMode = null
+    this.runnerMode = null
     this.state = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: this.mode, wordsCompleted: 0, oddScore: 0, winner: null }
     this.currentWordIndex = -1
     this.currentWord = null
@@ -204,6 +216,15 @@ export class Engine {
         this.state.totalCollected = s.stars
         this.state.currentLevel = s.currentZombie
         this.state.totalLevels = 7
+        this.onStateChange?.(this.state)
+      }
+    } else if (this.mode === 'runner') {
+      this.runnerMode = new LetterRunnerMode(this.canvas.width, this.canvas.height)
+      this.runnerMode.onStateChange = (s) => {
+        this.state.score = s.score
+        this.state.totalCollected = s.lettersCollected
+        this.state.currentLevel = Math.floor(s.distance)
+        this.state.winner = s.won ? 'human' : s.gameOver ? 'oddbods' : null
         this.onStateChange?.(this.state)
       }
     } else this.spawnInitialLetters()
@@ -347,6 +368,29 @@ export class Engine {
         }
       }
       this.danceMode?.update()
+      return
+    }
+
+    if (this.mode === 'runner') {
+      const rect = this.canvas.getBoundingClientRect()
+      for (const click of this.input.getClicks()) {
+        const cx = click.x - rect.left
+        const cy = click.y - rect.top
+        this.runnerMode?.handleClick(cx, cy)
+      }
+      const keys = 'abcdefghijklmnopqrstuvwxyz'
+      for (const key of keys) {
+        if (this.input.wasPressed(key)) {
+          this.runnerMode?.handleKey(key)
+        }
+      }
+      if (this.input.wasPressed(' ') || this.input.wasPressed('arrowup')) {
+        this.runnerMode?.handleKey(' ')
+      }
+      if (this.input.wasPressed(' ') && (this.runnerMode as any)?.state?.gameOver) {
+        this.runnerMode?.restart()
+      }
+      this.runnerMode?.update()
       return
     }
 
@@ -657,6 +701,11 @@ export class Engine {
       return
     }
 
+    if (this.mode === 'runner') {
+      this.runnerMode?.draw(ctx)
+      return
+    }
+
     for (const letter of this.letters) letter.draw(ctx, this.frame)
     for (const chaser of this.chasers) chaser.draw(ctx)
 
@@ -723,6 +772,7 @@ export class Engine {
       case 'rescue':
       case 'carnival':
       case 'dance':
+      case 'runner':
         break
     }
   }
