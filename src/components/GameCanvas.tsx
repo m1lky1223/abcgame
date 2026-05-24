@@ -21,8 +21,7 @@ export default function GameCanvas({ onReady, onStateChange, mode }: GameCanvasP
     onReady(engine)
 
     const handleResize = () => {
-      canvas.width = canvas.clientWidth
-      canvas.height = canvas.clientHeight
+      engine.resize(canvas.clientWidth, canvas.clientHeight)
     }
     window.addEventListener('resize', handleResize)
 
