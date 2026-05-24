@@ -64,7 +64,7 @@ export class BalloonPopMode {
           if (this.wave > 20) { this.win = true; this.checkHighScore() }
           else this.spawnTimer = 60
         }
-        return
+        continue
       }
     }
   }
@@ -89,7 +89,7 @@ export class BalloonPopMode {
           if (this.wave > 20) { this.win = true; this.checkHighScore() }
           else this.spawnTimer = 60
         }
-        return
+        continue
       }
     }
   }

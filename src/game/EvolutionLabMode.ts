@@ -176,7 +176,7 @@ export class EvolutionLabMode {
     localStorage.setItem('evolutions', JSON.stringify(this.state.evolutions))
 
     const totalEvolutions = Object.values(this.state.evolutions).filter(e => e.level >= 3).length
-    if (totalEvolutions >= 52) {
+    if (totalEvolutions >= 26) {
       this.state.winner = true
     }
 
@@ -511,9 +511,11 @@ export class EvolutionLabMode {
   }
 
   restart(): void {
+    const saved = localStorage.getItem('evolutions')
+    const freshEvolutions = saved ? JSON.parse(saved) : {}
     this.state = {
       dna: 0, lettersPopped: 0,
-      evolutions: { ...this.loadedEvolutions },
+      evolutions: { ...freshEvolutions },
       score: 0, winner: false,
       screen: 'play', selectedLetter: null,
     }

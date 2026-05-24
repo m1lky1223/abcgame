@@ -178,7 +178,7 @@ export class DanceAcademyMode {
   private handleLetter(letter: string): void {
     const needed = this.currentWord[this.blankIndex]
     if (letter === needed) {
-      this.state.score += letter.toLowerCase() === letter ? 10 : 5
+      this.state.score += 10
       this.correctFlash = 1
       this.judgeIndex = Math.floor(Math.random() * JUDGES.length)
       this.showJudge = true

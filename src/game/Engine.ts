@@ -109,6 +109,7 @@ export class Engine {
     this.input.attach()
     this.strategy.start(this.canvas.width, this.canvas.height)
     this.running = true
+    this.onStateChange?.(this.state)
     this.loop()
   }
 

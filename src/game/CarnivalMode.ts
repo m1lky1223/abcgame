@@ -362,7 +362,16 @@ export class CarnivalMode {
     }
   }
 
-  private handleDanceClick(_cx: number, _cy: number): void {
+  private handleDanceClick(cx: number, cy: number): void {
+    if (this.state.winner || this.boothPhase === 'transition') return
+    if (this.danceIndex >= this.danceSequence.length) return
+    const startX = (this.canvasW - this.danceSequence.length * 50) / 2
+    const dy = this.canvasH / 2 - 30
+    const i = this.danceIndex
+    const dx = startX + i * 50
+    if (cx >= dx && cx <= dx + 40 && cy >= dy && cy <= dy + 40) {
+      this.handleKey(this.danceSequence[i].toLowerCase())
+    }
   }
 
   private handleMemoryClick(cx: number, cy: number): void {

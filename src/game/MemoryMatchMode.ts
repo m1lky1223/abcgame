@@ -90,7 +90,7 @@ export class MemoryMatchMode {
               else { this.win = true }
             }
           } else {
-            this.combo = 0
+            this.combo = 1
             this.flipBackTimer = 60
             this.flipBackCards = [...this.selected]
           }
