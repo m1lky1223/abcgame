@@ -106,7 +106,14 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
             background: 'linear-gradient(135deg, #8e44ad, #6c3483)',
             color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
           }}>
-            🏚️ ZOMBIE RESCUE
+            🏚️ RESCUE
+          </button>
+          <button onClick={() => onStartMode('carnival')} style={{
+            padding: '12px 30px', fontSize: 16, fontWeight: 700,
+            background: 'linear-gradient(135deg, #e67e22, #d35400)',
+            color: '#fff', border: 'none', borderRadius: 12, letterSpacing: 1, cursor: 'pointer',
+          }}>
+            🎪 CARNIVAL
           </button>
         </div>
       </div>
