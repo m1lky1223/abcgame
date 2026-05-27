@@ -1,5 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
-import { FloatingLetter } from './FloatingLetter'
+import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
 
 const TEACHERS = [
   { name: 'Bubbles', subject: 'Science', emoji: '🔬', line: 'A is for Apple! Let us grow one!' },
@@ -37,143 +37,67 @@ const LESSON_WORDS: Record<string, string[]> = {
   'Y': ['YES', 'YELLOW', 'YARN'], 'Z': ['ZOO', 'ZIP', 'ZEBRA'],
 }
 
-export class ZombieSchoolMode {
-  private canvasW: number; private canvasH: number
-  private frame = 0; private lessonIndex = 0; private wordIndex = 0
-  private score = 0; private stars = 0; private completed: string[] = []
-  private floatingLetters: FloatingLetter[] = []
-  private particles: any[] = []
-  private correctFlash = 0
-  private currentLetter = ''
-  private currentWord = ''
-  private teacherLine = ''; private teacherTimer = 0
-  private transition = 0; private recessTimer = 0
-  private inRecess = false; private winner = false
+export class ZombieSchoolMode extends ThemedLetterQuestMode {
+  private stars = 0
+  private teacherLine = ''
+  private teacherTimer = 0
+  private recessTimer = 0
+  private inRecess = false
 
-  onStateChange?: (s: any) => void
-
-  constructor(canvasW: number, canvasH: number) {
-    this.canvasW = canvasW; this.canvasH = canvasH
-    this.startLesson()
+  constructor(w: number, h: number) {
+    super(w, h)
+    this.wordLists = LESSON_WORDS
+    this.particleColor = '#58d68d'
+    this.initRound()
   }
 
-  private startLesson(): void {
-    this.currentLetter = ALL_LETTERS[this.lessonIndex]
+  protected initRound(): void {
+    this.currentLetter = ALL_LETTERS[this.progressIndex]
     this.wordIndex = 0
     this.correctFlash = 0
     this.teacherLine = ''
     this.teacherTimer = 0
     const words = LESSON_WORDS[this.currentLetter]
-    if (words) this.nextWord()
+    if (words) this.advanceToNextWord()
   }
 
-  private nextWord(): void {
-    const words = LESSON_WORDS[this.currentLetter]
-    if (!words || this.wordIndex >= words.length) {
-      this.completed.push(this.currentLetter)
-      this.lessonIndex++
-      if (this.lessonIndex >= 26) { this.winner = true; return }
-      if (this.lessonIndex % 5 === 0) {
-        this.inRecess = true; this.recessTimer = 0
-      } else {
-        this.transition = 1
-      }
-      return
-    }
-    this.currentWord = words[this.wordIndex]
-    this.spawnLetters()
-  }
-
-  private spawnLetters(): void {
-    const needed = this.currentLetter
-    const options = [needed]
-    const pool = ALL_LETTERS.filter(l => l !== needed)
-    while (options.length < 5) {
-      const p = pool[Math.floor(Math.random() * pool.length)]
-      if (!options.includes(p)) options.push(p)
-    }
-    for (let i = options.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); [options[i], options[j]] = [options[j], options[i]]
-    }
-    this.floatingLetters = options.map(l => new FloatingLetter(this.canvasW, this.canvasH, l, 150))
-    const teacher = TEACHERS[this.lessonIndex % TEACHERS.length]
+  protected spawnLetters(): void {
+    super.spawnLetters()
+    const teacher = TEACHERS[this.progressIndex % TEACHERS.length]
     this.teacherLine = teacher.line.replace('A', this.currentLetter)
     this.teacherTimer = 80
   }
 
-  handleClick(cx: number, cy: number): void {
-    if (this.winner || this.correctFlash > 0 || this.transition > 0 || this.inRecess) return
-    for (const l of this.floatingLetters) {
-      if (!l.collected && l.containsCanvas(cx, cy)) {
-        this.checkLetter(l.letter); l.pop(); return
-      }
+  protected onLetterDone(): void {
+    if (this.progressIndex >= 26) { this.winner = true; return }
+    if (this.progressIndex % 5 === 0) {
+      this.inRecess = true; this.recessTimer = 0
     }
   }
 
-  handleKey(key: string): void {
-    if (this.winner || this.correctFlash > 0 || this.transition > 0 || this.inRecess) return
-    const l = this.floatingLetters.find(f => !f.collected && f.letter.toLowerCase() === key)
-    if (l) { this.checkLetter(l.letter); l.pop() }
+  protected advanceToNextLetter(): void {
+    this.progressIndex++
+    this.onLetterDone()
+    if (this.winner) return
+    if (!this.inRecess) this.transition = 1
   }
 
-  private checkLetter(letter: string): void {
-    if (letter === this.currentLetter) {
-      this.score += 10; this.wordIndex++; this.correctFlash = 1
-      for (let i = 0; i < 10; i++) {
-        const a = Math.random() * Math.PI * 2; const s = 2 + Math.random() * 3
-        this.particles.push({ x: this.canvasW / 2, y: this.canvasH * 0.4, vx: Math.cos(a) * s, vy: Math.sin(a) * s, color: '#58d68d', life: 0, maxLife: 20 })
-      }
-      this.stars++
-      this.onStateChange?.({ score: this.score, lesson: this.lessonIndex + 1, totalLessons: 26 })
-    }
+  protected blockInput(): boolean {
+    return this.inRecess
   }
 
-  update(): void {
-    if (this.winner) { this.frame++; return }
-    this.frame++
+  protected extraUpdate(): void {
     if (this.teacherTimer > 0) this.teacherTimer--
-
     if (this.inRecess) {
       this.recessTimer++
       if (this.recessTimer > 90) { this.inRecess = false; this.transition = 1 }
-      return
     }
-
-    if (this.transition > 0) {
-      this.transition++
-      if (this.transition > 30) { this.transition = 0; this.startLesson() }
-      return
-    }
-
-    if (this.correctFlash > 0) {
-      this.correctFlash++
-      for (const p of this.particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life++ }
-      this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
-      if (this.correctFlash > 30) {
-        this.correctFlash = 0
-        this.nextWord()
-      }
-      return
-    }
-
-    for (const l of this.floatingLetters) { l.update(0) }
-    this.floatingLetters = this.floatingLetters.filter(l => { if (l.collected) return l.popTime < l.popDuration; return true })
-    for (const p of this.particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life++ }
-    this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: CanvasRenderingContext2D): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a1a2e'); grad.addColorStop(1, '#2a1a2e')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
-
-    ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
-    ctx.textAlign = 'left'; ctx.fillStyle = '#58d68d'
-    const teacher = TEACHERS[this.lessonIndex % TEACHERS.length]
-    ctx.fillText(`📚 Lesson ${this.lessonIndex + 1}/26: Letter ${this.currentLetter}`, 12, 16)
-    ctx.textAlign = 'right'; ctx.fillStyle = '#f5b041'
-    ctx.fillText(`Teacher: ${teacher.emoji} ${teacher.name}  ⭐${this.stars}`, this.canvasW - 12, 16)
 
     ctx.fillStyle = '#8a7a6e'; ctx.fillRect(0, this.canvasH * 0.55, this.canvasW, 4)
 
@@ -186,67 +110,56 @@ export class ZombieSchoolMode {
       ctx.fillStyle = '#222'; ctx.font = '8px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
       ctx.fillText(STUDENTS[i].name.substring(0, 4), sx, sy + 1)
 
-      if (i === this.lessonIndex % 7) {
+      if (i === this.progressIndex % 7) {
         ctx.strokeStyle = '#f5b041'; ctx.lineWidth = 2
         ctx.beginPath(); ctx.arc(sx, sy, r + 3, 0, Math.PI * 2); ctx.stroke()
       }
     }
+  }
 
-    if (this.currentWord && !this.correctFlash && !this.transition && !this.inRecess) {
+  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
+    ctx.textAlign = 'left'; ctx.fillStyle = '#58d68d'
+    const teacher = TEACHERS[this.progressIndex % TEACHERS.length]
+    ctx.fillText(`📚 Lesson ${this.progressIndex + 1}/26: Letter ${this.currentLetter}`, 12, 16)
+    ctx.textAlign = 'right'; ctx.fillStyle = '#f5b041'
+    ctx.fillText(`Teacher: ${teacher.emoji} ${teacher.name}  ⭐${this.stars}`, this.canvasW - 12, 16)
+  }
+
+  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+    const words = LESSON_WORDS[this.currentLetter]
+    if (words && this.currentWord && !this.correctFlash && !this.transition && !this.inRecess) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 36px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
-      const words = LESSON_WORDS[this.currentLetter]
-      if (words) {
-        const idx = this.wordIndex < words.length ? this.wordIndex : 0
-        ctx.fillText(words[idx], this.canvasW / 2, 80)
+      ctx.fillText(words[this.wordIndex - 1] || words[0], this.canvasW / 2, 80)
 
-        ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '14px system-ui'
-        ctx.fillText(`Pop the letter: ${this.currentLetter}`, this.canvasW / 2, 125)
-      }
+      ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '14px system-ui'
+      ctx.fillText(`Pop the letter: ${this.currentLetter}`, this.canvasW / 2, 125)
     }
 
     if (this.teacherTimer > 0) {
       ctx.fillStyle = 'rgba(0,0,0,0.6)'
       ctx.beginPath(); ctx.roundRect(this.canvasW / 2 - 160, this.canvasH * 0.42, 320, 32, 8); ctx.fill()
       ctx.fillStyle = '#ffd'; ctx.font = '12px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-      ctx.fillText(`${teacher.emoji} "${this.teacherLine}"`, this.canvasW / 2, this.canvasH * 0.42 + 16)
-    }
-
-    for (const l of this.floatingLetters) {
-      if (!l.collected) l.draw(ctx, this.frame)
-      else if (l.popTime < l.popDuration) l.draw(ctx, this.frame)
-    }
-
-    for (const p of this.particles) {
-      const a = 1 - p.life / p.maxLife; if (a <= 0) continue
-      ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(p.x, p.y, 3 * a, 0, Math.PI * 2)
-      ctx.fillStyle = p.color; ctx.fill()
-    }
-    ctx.globalAlpha = 1
-
-    if (this.inRecess) {
-      ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
-      ctx.fillStyle = '#f5b041'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-      ctx.fillText('🎉 Recess Time! 5 letters learned!', this.canvasW / 2, this.canvasH / 2)
-    }
-
-    if (this.transition > 0) {
-      ctx.fillStyle = `rgba(0,0,0,${Math.min(0.3, this.transition / 15)})`; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
-    }
-
-    if (this.winner) {
-      ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
-      ctx.fillStyle = '#58d68d'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-      ctx.fillText('🎓 Graduation Day! All 26 letters learned!', this.canvasW / 2, this.canvasH / 2 - 20)
-      ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'
-      ctx.fillText(`Score: ${this.score}  Stars: ${this.stars}`, this.canvasW / 2, this.canvasH / 2 + 20)
+      ctx.fillText(`${TEACHERS[this.progressIndex % TEACHERS.length].emoji} "${this.teacherLine}"`, this.canvasW / 2, this.canvasH * 0.42 + 16)
     }
   }
 
-  restart(): void {
-    this.lessonIndex = 0; this.wordIndex = 0; this.score = 0; this.stars = 0
-    this.completed = []; this.floatingLetters = []; this.particles = []
-    this.correctFlash = 0; this.transition = 0; this.recessTimer = 0
-    this.inRecess = false; this.winner = false; this.frame = 0
-    this.startLesson()
+  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+    if (this.inRecess) {
+      ctx.fillStyle = '#f5b041'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+      ctx.fillText('🎉 Recess Time! 5 letters learned!', this.canvasW / 2, this.canvasH / 2)
+    }
+  }
+
+  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = '#58d68d'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    ctx.fillText('🎓 Graduation Day! All 26 letters learned!', this.canvasW / 2, this.canvasH / 2 - 20)
+    ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'
+    ctx.fillText(`Score: ${this.score}  Stars: ${this.stars}`, this.canvasW / 2, this.canvasH / 2 + 20)
+  }
+
+  protected getStatePayload(): Record<string, unknown> {
+    return { score: this.score, lesson: this.progressIndex + 1, totalLessons: 26 }
   }
 }

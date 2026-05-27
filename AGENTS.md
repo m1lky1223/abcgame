@@ -20,58 +20,88 @@ Educational alphabet game for ages 4+. Three IP pillars: **Alphabet Lore**, **Zo
 | Zombie Alphabet | `src/game/ZombieChaser.ts`, `src/game/ZombieRescueMode.ts` | Survival, Defense, Rescue, ZombieSchool |
 | OddBods | `src/game/OddbodChaser.ts`, `src/game/CarnivalMode.ts` | Free Pop, Survival, Carnival, Angry Birds-style modes |
 
-## All 17 game modes
+## All 31 game modes
 
-### Core (engine-based)
+### Core shared implementation
+
+These six modes are backed by `src/game/strategies/LetterPopCore.ts` through `LetterPopMode`.
+
 | Mode | Description |
 |------|-------------|
 | **Free Pop** | Pop floating letters. Collect all 26 before OddBods do. |
-| **Word Pop** | Emoji + word with a blank. Pop the correct letter. |
-| **Survival** | ❤️ 3 lives. Avoid OddBods & Zombies. |
-| **Time Attack** | ⏱️ 60s score rush. |
-| **Word Race** | 🔤 Spell the word in order, chasers pursue. |
-| **Defense** | 🛡️ Protect letters, click to kill chasers. |
+| **Word Pop** | Word prompt with a blank. Pop the correct letter. |
+| **Survival** | 3 lives. Avoid OddBods and zombies while scoring. |
+| **Time Attack** | 60-second score rush. |
+| **Word Race** | Spell the word in order while chasers pursue. |
+| **Defense** | Protect letters by clicking chasers before they break through. |
 
-### Self-contained (mini-games)
+### Self-contained arcade modes
+
 | Mode | Description |
 |------|-------------|
-| **Odd Birds** | 🐦 Angry Birds-style. Launch projectiles at letter blocks. |
-| **Rescue** | 🏚️ Free caged letters from zombies. |
-| **Carnival** | 🎪 7 booths: balloon pop, fire ring, candy catch, etc. |
-| **Dance Academy** | 💃 Follow the letter dance pattern. |
-| **Runner** | 🏃 Endless runner, collect letters, avoid obstacles. |
-| **Evolution Lab** | 🧬 Merge letters to evolve. |
-| **Balloon Pop** | 🎈 Pop letter balloons. |
-| **Memory Match** | 🧠 Flip cards, match letter pairs. |
-| **Chef Kitchen** | 👨‍🍳 Cook recipes by finding the right letters. |
-| **Detective** | 🔍 Solve letter-based mysteries. |
-| **Zombie School** | 📚 Survive lessons while zombies chase. |
-| **Pirate Hunt** | 🏴‍☠️ Zombie pirates search for alphabet treasure. Pop the right letter chests! |
-| **Circus** | 🎪 Ringmaster the circus! 7 acts with zombie acrobats and Oddbods. |
+| **Odd Birds** | Angry Birds-style. Launch projectiles at letter blocks. |
+| **Rescue** | Free caged letters from zombies. |
+| **Carnival** | Seven booths: balloon pop, fire ring, candy catch, dance, memory, etc. |
+| **Dance Academy** | Follow word/letter dance prompts. |
+| **Runner** | Endless runner: collect letters, avoid obstacles, escape chasers. |
+| **Evolution Lab** | Collect DNA and evolve letters into OddBod/zombie variants. |
+| **Alphabet Arcade** | Street Fighter-style side-view battles between Alphabet Lore letters. |
+
+### Self-contained mini-games
+
+| Mode | Description |
+|------|-------------|
+| **Balloon Pop** | Pop letter balloons/zombies across waves. |
+| **Memory Match** | Flip cards and match letter pairs. |
+| **Chef Kitchen** | Cook recipes by finding the next needed ingredient letter. |
+| **Detective** | Find clues, reveal the missing letter, solve 26 cases. |
+| **Zombie School** | Complete 26 letter lessons with occasional recess transitions. |
+| **Pirate Hunt** | Search for alphabet treasure by choosing the right letter chest. |
+| **Circus** | Complete seven circus acts by choosing missing word letters. |
+| **Shooting Gallery** | Target zombies with OddBod shooters, manage ammo/reload, rescue letters. |
+| **Pizza Delivery** | Serve zombie customers by popping the current pizza/ingredient letter. |
+| **Construction** | Build 26 structures by popping the current construction letter. |
+| **Mail Carriers** | Deliver 26 letters by popping the current mail/word letter. |
+| **Alphabet Garden** | Grow 26 plants through staged correct-letter pops. |
+| **Firefighters** | Extinguish 26 themed fires by popping the current rescue letter. |
+| **Zombie Doctor** | Cure 26 patients by popping the current medical word letter. |
+| **Alphabet Train** | Complete 26 train stops by popping the current cargo letter. |
+| **Space Explorers** | Make 26 discoveries by popping the current signal letter. |
+| **Zombie Bakery** | Serve 26 bakery customers by popping the current treat letter. |
+| **Alphabet Aquarium** | Discover 26 sea creatures by popping the current bubble letter. |
+
+## Mode similarity map
+
+Most modes fall into a few reusable gameplay loops:
+
+| Group | Modes | Shared loop |
+|-------|-------|-------------|
+| `LetterPopCore` variants | Free Pop, Word Pop, Survival, Time Attack, Word Race, Defense | Floating letters, tap/key input, optional words, timers, lives, and chasers. |
+| Themed A-Z letter quests | Bakery, Mail Carriers, Doctor, Train, Firefighters, Pizza Delivery, Aquarium, Space Explorers, Zombie School | Progress A-Z, set `currentLetter`, spawn five floating choices, accept click/key, advance after the correct letter. |
+| Staged A-Z letter quests | Construction, Alphabet Garden | Same correct-letter picker as above, but with build/growth stages instead of word lists. |
+| Word-blank choosers | Word Pop, Word Race, Pirate Hunt, Circus, Dance Academy, Chef Kitchen | Choose the missing or next needed letter from distractors. |
+| Target pop/shooter | Balloon Pop, Shooting Gallery, Defense, Time Attack | Hit moving targets quickly; Shooting Gallery adds ammo/reload/projectiles. |
+| Memory pairs | Memory Match, Carnival booth 7 | Flip cards and match letter pairs. |
+| Mostly unique | Odd Birds, Runner, Evolution Lab, Detective, Carnival, Alphabet Arcade | Physics, endless-runner, upgrade/evolution, hidden-object, multi-booth, or fighting-game gameplay. |
 
 ## Architecture (current + planned)
 
 ### Current
 ```
-Engine.ts (1153 lines, monolith)
-  ├── if-else ladder for mode dispatch (start/restart/update/draw)
-  ├── Input.ts (window event listeners)
-  ├── Background.ts (Canvas 2D)
-  ├── FloatingLetter.ts + OddbodChaser.ts + ZombieChaser.ts
-  └── 11 self-contained modes (each with own update/draw/input)
+Engine.ts (thin orchestrator)
+  - createStrategy(mode, canvasW, canvasH)
+  - LetterPopMode wraps LetterPopCore for the six core modes
+  - SelfContainedAdapter wraps each self-contained mini-game
+  - Input.ts builds GameInput once per frame
+  - Strategy owns update/draw/restart behavior
 ```
 
-### Planned (after refactor)
+### Still planned
 ```
-Engine.ts (thin orchestrator)
-  ├── GameModeStrategy interface
-  │   ├── LetterPopMode (free/word/survival/timeattack/wordrace/defense)
-  │   └── SelfContainedAdapter wrapping each mini-game
-  ├── Input → GameInput (processed once per frame)
-  ├── Background → Renderer
-  └── Renderer interface
-      ├── Canvas2DRenderer (web)
-      └── SkiaRenderer (React Native mobile)
+Renderer interface split
+  - Canvas2DRenderer for web
+  - SkiaRenderer for React Native mobile
+  - Move direct drawing out of character/enemy/game classes over time
 ```
 
 ## Platform split

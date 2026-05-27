@@ -47,7 +47,9 @@ export default function App() {
 
   const getGameOverText = (): { title: string; subtitle: string } => {
     if (!gameState.winner) return { title: '', subtitle: '' }
+    if (mode === 'alphabetArcade' && gameState.winner === 'oddbods') return { title: 'Knockout!', subtitle: `Reached round ${gameState.currentLevel ?? 1}/${gameState.totalLevels ?? 25}  |  Score: ${gameState.score}` }
     if (gameState.winner === 'human') {
+      if (mode === 'alphabetArcade') return { title: 'Arcade Champion!', subtitle: `Defeated the alphabet roster! Score: ${gameState.score}` }
       if (mode === 'timeattack') {
         const hs = gameState.highScore ?? gameState.score
         return { title: 'Time\'s Up! ⏰', subtitle: `Score: ${gameState.score}  |  Best: ${hs}` }

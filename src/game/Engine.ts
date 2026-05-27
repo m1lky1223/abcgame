@@ -28,9 +28,10 @@ import { TrainMode } from './TrainMode'
 import { SpaceExplorersMode } from './SpaceExplorersMode'
 import { BakeryMode } from './BakeryMode'
 import { AquariumMode } from './AquariumMode'
+import { AlphabetArcadeMode } from './AlphabetArcadeMode'
 import { WordEntry } from './words'
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting' | 'pizza' | 'construction' | 'mail' | 'garden' | 'fire' | 'doctor' | 'train' | 'space' | 'bakery' | 'aquarium'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting' | 'pizza' | 'construction' | 'mail' | 'garden' | 'fire' | 'doctor' | 'train' | 'space' | 'bakery' | 'aquarium' | 'alphabetArcade'
 
 export const WIN_SCORE = 26
 
@@ -55,6 +56,10 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameM
   const popModes: PopSubMode[] = ['free', 'word', 'survival', 'timeattack', 'wordrace', 'defense']
   if (popModes.includes(mode as PopSubMode)) {
     return new LetterPopMode(canvasW, canvasH, mode as PopSubMode)
+  }
+
+  if (mode === 'alphabetArcade') {
+    return new AlphabetArcadeMode(canvasW, canvasH)
   }
 
   const modeMap: Record<string, new (w: number, h: number) => SelfContainedMode> = {

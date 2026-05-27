@@ -81,6 +81,7 @@ export default function HUD({ state }: HUDProps) {
     case 'space':
     case 'bakery':
     case 'aquarium':
+    case 'alphabetArcade':
       leftContent = null
       rightContent = null
       break

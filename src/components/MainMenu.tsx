@@ -32,6 +32,7 @@ const MODE_ROWS: { title: string; modes: ModeEntry[] }[] = [
       { mode: 'dance', label: '💃 DANCE ACADEMY', gradient: 'linear-gradient(135deg, #2ecc71, #27ae60)' },
       { mode: 'runner', label: '🏃 RUNNER', gradient: 'linear-gradient(135deg, #3498db, #2980b9)' },
       { mode: 'lab', label: '🧬 EVOLUTION LAB', gradient: 'linear-gradient(135deg, #2ecc71, #1abc9c)' },
+      { mode: 'alphabetArcade', label: 'ALPHABET ARCADE', gradient: 'linear-gradient(135deg, #f5b041, #e74c5c)' },
     ],
   },
   {
