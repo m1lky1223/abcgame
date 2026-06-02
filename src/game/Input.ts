@@ -71,6 +71,9 @@ export class Input {
   }
 
   private handleDown(e: KeyboardEvent): void {
+    const tag = (e.target as HTMLElement)?.tagName
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return
+
     const key = e.key.toLowerCase()
     if (key.length === 1 || ['arrowup', 'arrowdown', ' ', 'enter'].includes(key)) {
       e.preventDefault()
