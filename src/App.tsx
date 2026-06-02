@@ -3,6 +3,7 @@ import { Engine, GameState, GameMode } from './game/Engine'
 import GameCanvas from './components/GameCanvas'
 import MainMenu from './components/MainMenu'
 import HUD from './components/HUD'
+import AIPromptCreator from './components/AIPromptCreator'
 
 type Screen = 'menu' | 'playing'
 
@@ -14,6 +15,8 @@ export default function App() {
     mode: 'free', wordsCompleted: 0, oddScore: 0, winner: null, ammoLeft: 30,
   })
   const [gameKey, setGameKey] = useState(0)
+  const [showAIPrompt, setShowAIPrompt] = useState(false)
+  const [customGameConfig, setCustomGameConfig] = useState<any>(null)
   const engineRef = useRef<Engine | null>(null)
 
   const handleStateChange = useCallback((state: GameState) => {
@@ -32,6 +35,12 @@ export default function App() {
     setGameKey(k => k + 1)
   }, [])
 
+  const startPromptGame = useCallback((config: any) => {
+    setCustomGameConfig(config)
+    setShowAIPrompt(false)
+    startGame('prompt')
+  }, [startGame])
+
   const handleReplay = useCallback(() => {
     if (engineRef.current) {
       engineRef.current.restart()
@@ -47,6 +56,14 @@ export default function App() {
 
   const getGameOverText = (): { title: string; subtitle: string } => {
     if (!gameState.winner) return { title: '', subtitle: '' }
+    if (mode === 'prompt') {
+      const customTitle = gameState.customTitle || 'Custom Mode'
+      if (gameState.winner === 'human') {
+        return { title: 'Victory! 🎉', subtitle: `You conquered ${customTitle}! Score: ${gameState.score}` }
+      } else {
+        return { title: 'Game Over 💀', subtitle: `Failed ${customTitle}. Final Score: ${gameState.score}` }
+      }
+    }
     if (mode === 'alphabetArcade' && gameState.winner === 'oddbods') return { title: 'Knockout!', subtitle: `Reached round ${gameState.currentLevel ?? 1}/${gameState.totalLevels ?? 25}  |  Score: ${gameState.score}` }
     if (gameState.winner === 'human') {
       if (mode === 'alphabetArcade') return { title: 'Arcade Champion!', subtitle: `Defeated the alphabet roster! Score: ${gameState.score}` }
@@ -92,13 +109,21 @@ export default function App() {
         onReady={handleReady}
         onStateChange={handleStateChange}
         mode={mode}
+        customConfig={customGameConfig}
       />
 
       {screen === 'menu' && (
-        <MainMenu onStartMode={startGame} />
+        <MainMenu onStartMode={startGame} onOpenAIPrompt={() => setShowAIPrompt(true)} />
       )}
 
-      {screen === 'playing' && !gameState.winner && mode !== 'angry' && (
+      {showAIPrompt && (
+        <AIPromptCreator
+          onStartGame={startPromptGame}
+          onClose={() => setShowAIPrompt(false)}
+        />
+      )}
+
+      {screen === 'playing' && !gameState.winner && mode !== 'angry' && mode !== 'kart' && mode !== 'suika' && mode !== 'pinball' && mode !== 'zombieDefense' && mode !== 'zombieDiner' && mode !== 'letterMaze' && (
         <HUD state={gameState} />
       )}
 

@@ -29,9 +29,16 @@ import { SpaceExplorersMode } from './SpaceExplorersMode'
 import { BakeryMode } from './BakeryMode'
 import { AquariumMode } from './AquariumMode'
 import { AlphabetArcadeMode } from './AlphabetArcadeMode'
+import { OddbodKartRacer } from './OddbodKartRacer'
+import { SuikaMode } from './SuikaMode'
+import { PinballMode } from './PinballMode'
+import { ZombieDefenseMode } from './ZombieDefenseMode'
+import { ZombieDinerMode } from './ZombieDinerMode'
+import { LetterMazeMode } from './LetterMazeMode'
 import { WordEntry } from './words'
+import { DynamicPromptStrategy } from './strategies/DynamicPromptStrategy'
 
-export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting' | 'pizza' | 'construction' | 'mail' | 'garden' | 'fire' | 'doctor' | 'train' | 'space' | 'bakery' | 'aquarium' | 'alphabetArcade'
+export type GameMode = 'free' | 'word' | 'survival' | 'timeattack' | 'wordrace' | 'defense' | 'angry' | 'rescue' | 'carnival' | 'dance' | 'runner' | 'lab' | 'balloon' | 'memory' | 'chef' | 'detective' | 'zombieSchool' | 'pirate' | 'circus' | 'shooting' | 'pizza' | 'construction' | 'mail' | 'garden' | 'fire' | 'doctor' | 'train' | 'space' | 'bakery' | 'aquarium' | 'alphabetArcade' | 'kart' | 'suika' | 'pinball' | 'zombieDefense' | 'zombieDiner' | 'letterMaze' | 'prompt'
 
 export const WIN_SCORE = 26
 
@@ -50,9 +57,14 @@ export interface GameState {
   ammoLeft?: number
   currentLevel?: number
   totalLevels?: number
+  customTitle?: string
 }
 
-function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameModeStrategy {
+function createStrategy(mode: GameMode, canvasW: number, canvasH: number, customConfig?: any): GameModeStrategy {
+  if (mode === 'prompt' && customConfig) {
+    return new DynamicPromptStrategy(canvasW, canvasH, customConfig)
+  }
+
   const popModes: PopSubMode[] = ['free', 'word', 'survival', 'timeattack', 'wordrace', 'defense']
   if (popModes.includes(mode as PopSubMode)) {
     return new LetterPopMode(canvasW, canvasH, mode as PopSubMode)
@@ -87,6 +99,12 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number): GameM
     space: SpaceExplorersMode,
     bakery: BakeryMode,
     aquarium: AquariumMode,
+    kart: OddbodKartRacer,
+    suika: SuikaMode,
+    pinball: PinballMode,
+    zombieDefense: ZombieDefenseMode,
+    zombieDiner: ZombieDinerMode,
+    letterMaze: LetterMazeMode,
   }
 
   const Inner = modeMap[mode]
@@ -110,11 +128,11 @@ export class Engine {
   onStateChange?: (state: GameState) => void
   onGameOver?: (winner: 'human' | 'oddbods') => void
 
-  constructor(canvas: HTMLCanvasElement, mode: GameMode = 'free') {
+  constructor(canvas: HTMLCanvasElement, mode: GameMode = 'free', customConfig?: any) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
     this.input = new Input()
-    this.strategy = createStrategy(mode, canvas.width, canvas.height)
+    this.strategy = createStrategy(mode, canvas.width, canvas.height, customConfig)
     this.state.mode = mode
     this.strategy.onStateChange = this.handleStrategyState
     this.loop = this.loop.bind(this)
@@ -133,6 +151,7 @@ export class Engine {
     if (s.totalLevels !== undefined) this.state.totalLevels = s.totalLevels
     if (s.collectedSet) this.state.collectedSet = s.collectedSet
     if (s.highScore !== undefined) this.state.highScore = s.highScore
+    if (s.customTitle !== undefined) this.state.customTitle = s.customTitle
     this.onStateChange?.(this.state)
   }
 

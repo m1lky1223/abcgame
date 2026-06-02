@@ -3,6 +3,7 @@ import { GameMode } from '../game/Engine'
 
 interface MainMenuProps {
   onStartMode: (mode: GameMode) => void
+  onOpenAIPrompt: () => void
 }
 
 interface ModeEntry {
@@ -33,6 +34,7 @@ const MODE_ROWS: { title: string; modes: ModeEntry[] }[] = [
       { mode: 'runner', label: '🏃 RUNNER', gradient: 'linear-gradient(135deg, #3498db, #2980b9)' },
       { mode: 'lab', label: '🧬 EVOLUTION LAB', gradient: 'linear-gradient(135deg, #2ecc71, #1abc9c)' },
       { mode: 'alphabetArcade', label: 'ALPHABET ARCADE', gradient: 'linear-gradient(135deg, #f5b041, #e74c5c)' },
+      { mode: 'kart', label: '🏎️ KART RACER', gradient: 'linear-gradient(135deg, #FF66BB, #CC3388)' },
     ],
   },
   {
@@ -56,11 +58,16 @@ const MODE_ROWS: { title: string; modes: ModeEntry[] }[] = [
       { mode: 'space', label: '🚀 SPACE EXPLORERS', gradient: 'linear-gradient(135deg, #2c3e50, #34495e)' },
       { mode: 'bakery', label: '🧁 ZOMBIE BAKERY', gradient: 'linear-gradient(135deg, #e67e22, #d35400)' },
       { mode: 'aquarium', label: '🐠 ALPHABET AQUARIUM', gradient: 'linear-gradient(135deg, #5dade2, #2980b9)' },
+      { mode: 'suika', label: '🍉 SUITA MERGE', gradient: 'linear-gradient(135deg, #e74c5c, #c0392b)' },
+      { mode: 'pinball', label: '🕹️ PINBALL', gradient: 'linear-gradient(135deg, #FF66BB, #CC3388)' },
+      { mode: 'zombieDefense', label: '🧟 TOWER DEFENSE', gradient: 'linear-gradient(135deg, #2c3e50, #34495e)' },
+      { mode: 'zombieDiner', label: '🍽️ ZOMBIE DINER', gradient: 'linear-gradient(135deg, #8B4513, #D2691E)' },
+      { mode: 'letterMaze', label: '🔤 LETTER MAZE', gradient: 'linear-gradient(135deg, #58d68d, #2ecc71)' },
     ],
   },
 ]
 
-export default function MainMenu({ onStartMode }: MainMenuProps) {
+export default function MainMenu({ onStartMode, onOpenAIPrompt }: MainMenuProps) {
   const previews = ['A', 'B', 'C', 'D', 'E']
 
   return (
@@ -101,6 +108,60 @@ export default function MainMenu({ onStartMode }: MainMenuProps) {
             </div>
           )
         })}
+      </div>
+
+      {/* AI Prompt Game Builder Trigger Card */}
+      <div 
+        onClick={onOpenAIPrompt}
+        style={{
+          width: '100%',
+          maxWidth: 680,
+          background: 'linear-gradient(135deg, rgba(255, 123, 0, 0.15), rgba(255, 218, 0, 0.05))',
+          border: '2px solid rgba(255, 174, 0, 0.3)',
+          borderRadius: 20,
+          padding: '16px 24px',
+          marginBottom: 28,
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 8px 32px rgba(255, 123, 0, 0.1)',
+          transition: 'all 0.2s',
+          boxSizing: 'border-box'
+        }}
+        onMouseOver={e => {
+          e.currentTarget.style.transform = 'scale(1.015)'
+          e.currentTarget.style.borderColor = 'rgba(255, 174, 0, 0.6)'
+          e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 123, 0, 0.18)'
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.transform = 'scale(1.0)'
+          e.currentTarget.style.borderColor = 'rgba(255, 174, 0, 0.3)'
+          e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 123, 0, 0.1)'
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, textAlign: 'left' }}>
+          <span style={{ fontSize: 11, fontWeight: 800, color: '#f5b041', letterSpacing: 2, textTransform: 'uppercase' }}>
+            NEW GENERATIVE AI MODE
+          </span>
+          <span style={{ fontSize: 20, fontWeight: 900, color: '#fff', letterSpacing: 0.5 }}>
+            🚀 AI GAME ENGINE CREATOR
+          </span>
+          <span style={{ fontSize: 13, color: '#ccddee', opacity: 0.85 }}>
+            Type a prompt to build a customized game mode on the fly!
+          </span>
+        </div>
+        <div style={{
+          background: 'linear-gradient(135deg, #ff7b00, #ffae00)',
+          color: '#0b0e17',
+          fontWeight: 900,
+          fontSize: 14,
+          padding: '10px 18px',
+          borderRadius: 12,
+          boxShadow: '0 4px 12px rgba(255, 123, 0, 0.3)'
+        }}>
+          BUILD 🛠️
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', width: '100%', maxWidth: 700 }}>

@@ -5,9 +5,10 @@ interface GameCanvasProps {
   onReady: (engine: Engine) => void
   onStateChange: (state: GameState) => void
   mode: GameMode
+  customConfig?: any
 }
 
-export default function GameCanvas({ onReady, onStateChange, mode }: GameCanvasProps) {
+export default function GameCanvas({ onReady, onStateChange, mode, customConfig }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -15,7 +16,7 @@ export default function GameCanvas({ onReady, onStateChange, mode }: GameCanvasP
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
 
-    const engine = new Engine(canvas, mode)
+    const engine = new Engine(canvas, mode, customConfig)
     engine.onStateChange = onStateChange
     engine.start()
     onReady(engine)
@@ -29,7 +30,7 @@ export default function GameCanvas({ onReady, onStateChange, mode }: GameCanvasP
       engine.stop()
       window.removeEventListener('resize', handleResize)
     }
-  }, [mode])
+  }, [mode, customConfig])
 
   return (
     <canvas
