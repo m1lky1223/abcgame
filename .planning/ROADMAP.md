@@ -6,7 +6,7 @@ Decouple the game's rendering pipeline from HTML5 Canvas to support both Web (Ca
 
 ## Phases
 
-- [ ] **Phase 1: Renderer Interface Decoupling** - Define the Renderer abstraction and migrate entities away from direct `CanvasRenderingContext2D` calls.
+- [x] **Phase 1: Renderer Interface Decoupling** - Define the Renderer abstraction and migrate entities away from direct `CanvasRenderingContext2D` calls.
 - [ ] **Phase 2: React Native Shell & Code Sharing** - Initialize Expo mobile container and configure TypeScript codebase sharing.
 - [ ] **Phase 3: React Native Skia Renderer & Input** - Implement the Skia-based rendering backend and map mobile gestures to `GameInput`.
 - [ ] **Phase 4: Android Build & APK packaging** - Configure credentials and run EAS build to package the installable APK.
@@ -29,15 +29,15 @@ Decouple the game's rendering pipeline from HTML5 Canvas to support both Web (Ca
 Plans:
 **Wave 1**
 
-- [ ] 01-01: Define `Renderer` interface and implement web `Canvas2DRenderer`.
+- [x] 01-01: Define `Renderer` interface and implement web `Canvas2DRenderer`.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02: Migrate entity classes (`draw.ts`, `Background.ts`, `OddbodChaser.ts`, `ZombieChaser.ts`) to use `Renderer` interface.
+- [x] 01-02: Migrate entity classes (`draw.ts`, `Background.ts`, `OddbodChaser.ts`, `ZombieChaser.ts`) to use `Renderer` interface.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03: Run typechecks, unit tests, and smoke tests to ensure web parities.
+- [x] 01-03: Run typechecks, unit tests, and smoke tests to ensure web parities.
 
 ### Phase 2: React Native Shell & Code Sharing
 
@@ -101,7 +101,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Decoupling | 0/3 | Not started | - |
+| 1. Decoupling | 3/3 | Complete | 2026-06-07 |
 | 2. RN Shell   | 0/2 | Not started | - |
 | 3. Rendering  | 0/3 | Not started | - |
 | 4. APK Build  | 0/2 | Not started | - |

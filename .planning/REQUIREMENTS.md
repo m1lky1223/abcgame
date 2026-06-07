@@ -7,10 +7,10 @@
 
 ### Renderer Decoupling (REND)
 
-- [ ] **REND-01**: Define `Renderer` interface containing abstractions for drawing lines, shapes, text, particles, and letter characters.
-- [ ] **REND-02**: Implement `Canvas2DRenderer` using Web Canvas Rendering Context 2D.
-- [ ] **REND-03**: Refactor entity classes (`draw.ts`, `Background.ts`, `OddbodChaser.ts`, `ZombieChaser.ts`) to use `Renderer` instead of direct canvas context.
-- [ ] **REND-04**: Verify zero direct canvas `ctx` references remain outside `Canvas2DRenderer` and the web components.
+- [x] **REND-01**: Define `Renderer` interface containing abstractions for drawing lines, shapes, text, particles, and letter characters.
+- [x] **REND-02**: Implement `Canvas2DRenderer` using Web Canvas Rendering Context 2D.
+- [x] **REND-03**: Refactor entity classes (`draw.ts`, `Background.ts`, `OddbodChaser.ts`, `ZombieChaser.ts`) to use `Renderer` instead of direct canvas context.
+- [x] **REND-04**: Verify zero direct canvas `ctx` references remain outside `Canvas2DRenderer` and the web components.
 
 ### Mobile Shell & Code Sharing (PORT)
 
@@ -42,10 +42,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| REND-01     | Phase 1 | Pending |
-| REND-02     | Phase 1 | Pending |
-| REND-03     | Phase 1 | Pending |
-| REND-04     | Phase 1 | Pending |
+| REND-01     | Phase 1 | Complete |
+| REND-02     | Phase 1 | Complete |
+| REND-03     | Phase 1 | Complete |
+| REND-04     | Phase 1 | Complete |
 | PORT-01     | Phase 2 | Pending |
 | PORT-02     | Phase 2 | Pending |
 | PORT-03     | Phase 2 | Pending |
