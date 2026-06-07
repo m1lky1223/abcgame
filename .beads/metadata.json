@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "abcgame",
+  "project_id": "18bd56c8-44b8-48e5-90b1-c57577facca5"
+}
