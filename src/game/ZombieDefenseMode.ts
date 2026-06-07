@@ -1,3 +1,4 @@
+import { Renderer } from '../renderer/Renderer'
 interface Defender {
   letter: string
   row: number
@@ -298,7 +299,7 @@ export class ZombieDefenseMode {
     this.particles = this.particles.filter(p => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawGrid(ctx)
     this.drawDefenders(ctx)
@@ -326,7 +327,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a2a1a')
     grad.addColorStop(1, '#0a1a0a')
@@ -339,7 +340,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawGrid(ctx: CanvasRenderingContext2D): void {
+  private drawGrid(ctx: Renderer): void {
     ctx.strokeStyle = 'rgba(100,150,100,0.2)'
     ctx.lineWidth = 1
     for (let row = 0; row <= this.gridRows; row++) {
@@ -364,7 +365,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawDefenders(ctx: CanvasRenderingContext2D): void {
+  private drawDefenders(ctx: Renderer): void {
     for (const d of this.defenders) {
       if (d.health <= 0) continue
       const colors: Record<string, string> = { 'A': '#e74c5c', 'B': '#5dade2', 'C': '#58d68d' }
@@ -394,7 +395,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawZombies(ctx: CanvasRenderingContext2D): void {
+  private drawZombies(ctx: Renderer): void {
     for (const z of this.zombies) {
       const pulse = Math.sin(this.frame * 0.08) * 2
       ctx.fillStyle = z.slowed ? '#5a8a5a' : '#4a6a4a'
@@ -432,7 +433,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawProjectiles(ctx: CanvasRenderingContext2D): void {
+  private drawProjectiles(ctx: Renderer): void {
     for (const p of this.projectiles) {
       if (!p.alive) continue
       ctx.fillStyle = '#e74c5c'
@@ -442,7 +443,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawInkDrops(ctx: CanvasRenderingContext2D): void {
+  private drawInkDrops(ctx: Renderer): void {
     for (const ink of this.inkDrops) {
       if (ink.collected) continue
       ctx.fillStyle = '#5dade2'
@@ -457,7 +458,7 @@ export class ZombieDefenseMode {
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -470,7 +471,7 @@ export class ZombieDefenseMode {
     ctx.globalAlpha = 1
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 32)
 
@@ -491,7 +492,7 @@ export class ZombieDefenseMode {
     ctx.fillText(`Zombies: ${this.zombies.length}`, this.canvasW - 10, 16)
   }
 
-  private drawSelectedInfo(ctx: CanvasRenderingContext2D): void {
+  private drawSelectedInfo(ctx: Renderer): void {
     const stats = DEFENDER_STATS[this.selectedDefender]
     if (!stats) return
     const cost = this.defenderCost(this.selectedDefender)

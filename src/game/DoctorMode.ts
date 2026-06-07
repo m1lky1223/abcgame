@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const SYMPTOM_WORDS: Record<string, string[]> = {
   'A': ['ALLER_Y', '_LLERGY'], 'B': ['_ANDAGE', 'BA_DAGE'], 'C': ['_HECKUP', 'CH_CKUP'],
@@ -34,7 +35,7 @@ export class DoctorMode extends ThemedLetterQuestMode {
     this.patientRecovered = true
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#e8f0f8'); grad.addColorStop(1, '#c8d8e8')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -58,7 +59,7 @@ export class DoctorMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#333'
@@ -67,7 +68,7 @@ export class DoctorMode extends ThemedLetterQuestMode {
     ctx.fillText(`Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#333'; ctx.font = 'bold 26px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Symptom: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.5)
@@ -76,12 +77,12 @@ export class DoctorMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#58d68d'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('💊 Patient cured! Next case...', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#58d68d'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🏆 Doctor of the Year! All 26 cured!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

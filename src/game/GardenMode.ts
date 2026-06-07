@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const PLANTS: Record<string, string> = {
   'A': 'Apple Tree', 'B': 'Blueberry Bush', 'C': 'Carrot', 'D': 'Daisy',
@@ -32,7 +33,7 @@ export class GardenMode extends ThemedLetterQuestMode {
     this.growth = this.wordIndex
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#4a8a5a'); grad.addColorStop(1, '#8a6a3a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -68,7 +69,7 @@ export class GardenMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#58d68d'
@@ -77,19 +78,19 @@ export class GardenMode extends ThemedLetterQuestMode {
     ctx.fillText(`Stage: ${'🌱'.repeat(Math.max(1, this.growth))}${'🌿'.repeat(Math.max(0, this.growth - 1))}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (!this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Water the ${PLANTS[this.currentLetter] || 'plant'} — pop ${this.currentLetter}!`, this.canvasW / 2, 130)
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#58d68d'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText(`🌻 ${PLANTS[this.currentLetter] || 'Plant'} fully grown!`, this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#58d68d'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🌸 Alphabet Garden Complete! All 26 blooming!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

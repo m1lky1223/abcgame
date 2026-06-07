@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { FloatingLetter } from './FloatingLetter'
+import { Renderer } from '../renderer/Renderer'
 
 interface DanceZombie {
   name: string
@@ -282,7 +283,7 @@ export class DanceAcademyMode {
     this.discoPhase += 0.02
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawDiscoBall(ctx)
     this.drawDanceFloor(ctx)
@@ -299,7 +300,7 @@ export class DanceAcademyMode {
     if (this.state.winner) this.drawWinScreen(ctx)
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#0a0a2e')
     grad.addColorStop(0.5, '#1a1a4e')
@@ -308,7 +309,7 @@ export class DanceAcademyMode {
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
   }
 
-  private drawDiscoBall(ctx: CanvasRenderingContext2D): void {
+  private drawDiscoBall(ctx: Renderer): void {
     const cx = this.canvasW / 2
     const cy = 55
     const r = 30
@@ -342,7 +343,7 @@ export class DanceAcademyMode {
     ctx.restore()
   }
 
-  private drawDanceFloor(ctx: CanvasRenderingContext2D): void {
+  private drawDanceFloor(ctx: Renderer): void {
     const floorY = this.canvasH * 0.62
     const tileSize = 40
 
@@ -363,7 +364,7 @@ export class DanceAcademyMode {
     }
   }
 
-  private drawDancers(ctx: CanvasRenderingContext2D): void {
+  private drawDancers(ctx: Renderer): void {
     for (let i = 0; i < this.dancers.length; i++) {
       const z = this.dancers[i]
       const isActive = i === this.state.currentZombie
@@ -423,7 +424,7 @@ export class DanceAcademyMode {
     }
   }
 
-  private drawWordPrompt(ctx: CanvasRenderingContext2D): void {
+  private drawWordPrompt(ctx: Renderer): void {
     if (this.correctFlash > 0) return
 
     const fontSize = 32
@@ -466,14 +467,14 @@ export class DanceAcademyMode {
     ctx.fillText('Pop the missing letter to teach the dance!', this.canvasW / 2, wordY + fontSize + 16)
   }
 
-  private drawFloatingLetters(ctx: CanvasRenderingContext2D): void {
+  private drawFloatingLetters(ctx: Renderer): void {
     for (const letter of this.floatingLetters) {
       if (!letter.collected) letter.draw(ctx, this.frame)
       else if (letter.popTime < letter.popDuration) letter.draw(ctx, this.frame)
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -486,7 +487,7 @@ export class DanceAcademyMode {
     ctx.globalAlpha = 1
   }
 
-  private drawMusicNotes(ctx: CanvasRenderingContext2D): void {
+  private drawMusicNotes(ctx: Renderer): void {
     for (const n of this.musicNotes) {
       const alpha = 1 - n.life / 60
       if (alpha <= 0) continue
@@ -499,7 +500,7 @@ export class DanceAcademyMode {
     ctx.globalAlpha = 1
   }
 
-  private drawJudge(ctx: CanvasRenderingContext2D): void {
+  private drawJudge(ctx: Renderer): void {
     if (!this.showJudge || this.judgeTimer > 40) return
     const alpha = 1 - this.judgeTimer / 40
     const judge = JUDGES[this.judgeIndex]
@@ -516,7 +517,7 @@ export class DanceAcademyMode {
     ctx.globalAlpha = 1
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, 34)
     ctx.fillStyle = '#fff'
@@ -533,7 +534,7 @@ export class DanceAcademyMode {
     ctx.fillText(`Score: ${this.state.score}  ⭐${this.state.stars}`, this.canvasW - 12, 17)
   }
 
-  private drawMessage(ctx: CanvasRenderingContext2D): void {
+  private drawMessage(ctx: Renderer): void {
     if (this.messageTimer <= 0) return
     ctx.fillStyle = `rgba(255,255,255,${Math.min(1, this.messageTimer / 20)})`
     ctx.font = '18px system-ui'
@@ -548,7 +549,7 @@ export class DanceAcademyMode {
     }
   }
 
-  private drawTransition(ctx: CanvasRenderingContext2D): void {
+  private drawTransition(ctx: Renderer): void {
     const alpha = Math.min(1, this.transition / 30)
     ctx.fillStyle = `rgba(0,0,0,${alpha * 0.5})`
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -563,7 +564,7 @@ export class DanceAcademyMode {
     ctx.fillText(`Next up: ${zombie.name} — ${zombie.dance}`, this.canvasW / 2, this.canvasH / 2 + 20)
   }
 
-  private drawWinScreen(ctx: CanvasRenderingContext2D): void {
+  private drawWinScreen(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#58d68d'

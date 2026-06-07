@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface CircusItem {
   x: number; y: number; letter: string
@@ -248,7 +249,7 @@ export class CircusMode {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const w = this.canvasW
     const h = this.canvasH
 
@@ -309,7 +310,7 @@ export class CircusMode {
     if (this.completed) return
   }
 
-  private drawTent(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawTent(ctx: Renderer, w: number, h: number): void {
     const grad = ctx.createLinearGradient(0, 0, 0, h)
     grad.addColorStop(0, '#1a0a2a')
     grad.addColorStop(0.3, '#2a1a3a')
@@ -371,7 +372,7 @@ export class CircusMode {
     ctx.fillRect(0, 0, w, h)
   }
 
-  private drawSign(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawSign(ctx: Renderer, w: number, _h: number): void {
     if (!this.currentWord) return
     const wd = this.currentWord
     const fontSize = Math.min(32, w * 0.065)
@@ -429,7 +430,7 @@ export class CircusMode {
     }
   }
 
-  private drawItem(ctx: CanvasRenderingContext2D, item: CircusItem): void {
+  private drawItem(ctx: Renderer, item: CircusItem): void {
     const bob = Math.sin(this.frame * 0.035 + item.bobPhase) * 10
     const cx = item.x
     const cy = item.y + bob
@@ -461,7 +462,7 @@ export class CircusMode {
     ctx.restore()
   }
 
-  private drawRingmaster(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawRingmaster(ctx: Renderer, w: number, h: number): void {
     const rx = w / 2
     const ry = h * 0.72
     const bob = Math.sin(this.frame * 0.02) * 2
@@ -495,7 +496,7 @@ export class CircusMode {
     ctx.restore()
   }
 
-  private drawAudience(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawAudience(ctx: Renderer, w: number, h: number): void {
     const ay = h * 0.88
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, ay, w, h - ay)
@@ -511,7 +512,7 @@ export class CircusMode {
     }
   }
 
-  private drawTrickAnimation(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawTrickAnimation(ctx: Renderer, w: number, h: number): void {
     const progress = 1 - this.showTrick / 50
     const phase = Math.sin(progress * Math.PI)
 
@@ -542,7 +543,7 @@ export class CircusMode {
     ctx.restore()
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawHUD(ctx: Renderer, w: number, _h: number): void {
     ctx.fillStyle = 'rgba(0,0,0,0.3)'
     ctx.fillRect(0, 0, w, 34)
     ctx.fillStyle = '#FFD700'

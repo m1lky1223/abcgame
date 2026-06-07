@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { FloatingLetter } from './FloatingLetter'
+import { Renderer } from '../renderer/Renderer'
 
 interface Recipe {
   dish: string; emoji: string; letters: string[]
@@ -142,7 +143,7 @@ export class ChefKitchenMode {
     this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a1a0a'); grad.addColorStop(0.5, '#3a2a1a'); grad.addColorStop(1, '#2a1a0a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)

@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface SuikaBall {
   letter: string
@@ -217,7 +218,7 @@ export class SuikaMode {
     this.onStateChange?.({ score: this.score, next: this.nextLetter })
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
 
     ctx.fillStyle = 'rgba(40, 40, 80, 0.4)'
@@ -326,7 +327,7 @@ export class SuikaMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a1a2e')
     grad.addColorStop(0.5, '#16213e')
@@ -345,7 +346,7 @@ export class SuikaMode {
     }
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 36)
 

@@ -1,3 +1,4 @@
+import { Renderer } from '../renderer/Renderer'
 interface AngryLetter {
   letter: string
   x: number
@@ -436,7 +437,7 @@ export class AngryMode {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     if (!this.projectile && !this.waitingForNext && !this.state.winner && this.state.ammoLeft > 0) {
       const pulse = 0.15 + 0.1 * Math.sin(Date.now() / 300)
       ctx.beginPath()
@@ -486,7 +487,7 @@ export class AngryMode {
     }
   }
 
-  private drawTrajectory(ctx: CanvasRenderingContext2D): void {
+  private drawTrajectory(ctx: Renderer): void {
     if (!this.showTrajectory || !this.isAiming) return
     ctx.setLineDash([4, 6])
     ctx.strokeStyle = 'rgba(255,255,255,0.25)'
@@ -511,7 +512,7 @@ export class AngryMode {
     ctx.fill()
   }
 
-  private drawFormations(ctx: CanvasRenderingContext2D): void {
+  private drawFormations(ctx: Renderer): void {
     for (const letter of this.letters) {
       if (!letter.alive) continue
       const x = letter.x
@@ -579,7 +580,7 @@ export class AngryMode {
     }
   }
 
-  private drawSlingshot(ctx: CanvasRenderingContext2D): void {
+  private drawSlingshot(ctx: Renderer): void {
     const sx = this.slingshotX
     const sy = this.slingshotY
     ctx.strokeStyle = '#4a2a0a'
@@ -621,7 +622,7 @@ export class AngryMode {
     ctx.stroke()
   }
 
-  private drawProjectile(ctx: CanvasRenderingContext2D): void {
+  private drawProjectile(ctx: Renderer): void {
     if (!this.projectile || this.projectile.stopped) {
       if (!this.projectile && !this.waitingForNext && !this.state.winner && this.state.ammoLeft > 0) {
         const colors = this.isAiming ? this.getAmmoColor() : ODD_COLORS[0]
@@ -682,7 +683,7 @@ export class AngryMode {
     ctx.stroke()
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       ctx.globalAlpha = 1 - p.life / 50
       ctx.fillStyle = p.color
@@ -693,7 +694,7 @@ export class AngryMode {
     ctx.globalAlpha = 1
   }
 
-  private drawAmmoHUD(ctx: CanvasRenderingContext2D): void {
+  private drawAmmoHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'

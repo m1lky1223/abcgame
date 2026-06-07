@@ -1,4 +1,5 @@
 import { ALL_LETTERS, CHARACTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface MemCard {
   letter: string; x: number; y: number; w: number; h: number
@@ -124,7 +125,7 @@ export class MemoryMatchMode {
     this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     ctx.fillStyle = '#0a0a2e'; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)

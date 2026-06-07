@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const BUILDING_WORDS: Record<string, string[]> = {
   'A': ['_PARTMENT', 'AP_RTMENT'], 'B': ['_AKERY', 'BA_ERY'], 'C': ['_ASTLE', 'CA_TLE'],
@@ -34,7 +35,7 @@ export class FireFightersMode extends ThemedLetterQuestMode {
     this.flameIntensity = Math.max(1, this.flameIntensity - 1)
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a1a2a'); grad.addColorStop(1, '#2a1a1a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -47,9 +48,13 @@ export class FireFightersMode extends ThemedLetterQuestMode {
       }
     }
 
-    const roof = new Path2D()
-    roof.moveTo(bx - 20, by); roof.lineTo(bx + 60, by - 30); roof.lineTo(bx + 140, by); roof.closePath()
-    ctx.fillStyle = '#5a3a3a'; ctx.fill(roof)
+    ctx.beginPath()
+    ctx.moveTo(bx - 20, by)
+    ctx.lineTo(bx + 60, by - 30)
+    ctx.lineTo(bx + 140, by)
+    ctx.closePath()
+    ctx.fillStyle = '#5a3a3a'
+    ctx.fill()
 
     if (this.flameIntensity > 0) {
       for (let f = 0; f < this.flameIntensity * 3; f++) {
@@ -64,7 +69,7 @@ export class FireFightersMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#e74c5c'
@@ -73,7 +78,7 @@ export class FireFightersMode extends ThemedLetterQuestMode {
     ctx.fillText(`${'🔥'.repeat(this.flameIntensity)}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 26px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Spray water: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.65)
@@ -82,12 +87,12 @@ export class FireFightersMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('💧 Fire extinguished! Next emergency!', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🚒 Heroes! All 26 buildings saved!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

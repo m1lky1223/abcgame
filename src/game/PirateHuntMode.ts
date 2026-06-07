@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { WORDS } from './words'
+import { Renderer } from '../renderer/Renderer'
 
 interface TreasureChest {
   x: number; y: number; letter: string
@@ -230,7 +231,7 @@ export class PirateHuntMode {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const w = this.canvasW
     const h = this.canvasH
 
@@ -295,7 +296,7 @@ export class PirateHuntMode {
     if (this.completed) return
   }
 
-  private drawOcean(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawOcean(ctx: Renderer, w: number, h: number): void {
     const oceanY = h * 0.78
     ctx.fillStyle = '#1a4a6a'
     ctx.fillRect(0, oceanY, w, h - oceanY)
@@ -327,7 +328,7 @@ export class PirateHuntMode {
     }
   }
 
-  private drawShip(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawShip(ctx: Renderer, w: number, h: number): void {
     const sx = w * 0.15
     const sy = h * 0.55
     const bob = Math.sin(this.frame * 0.015) * 3
@@ -372,7 +373,7 @@ export class PirateHuntMode {
     ctx.restore()
   }
 
-  private drawChest(ctx: CanvasRenderingContext2D, chest: TreasureChest): void {
+  private drawChest(ctx: Renderer, chest: TreasureChest): void {
     const bob = Math.sin(this.frame * 0.03 + chest.bobPhase) * 12
     const cx = chest.x
     const cy = chest.y + bob
@@ -408,7 +409,7 @@ export class PirateHuntMode {
     ctx.fillText(chest.letter, cx, cy + 2)
   }
 
-  private drawWordPrompt(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawWordPrompt(ctx: Renderer, w: number, _h: number): void {
     if (!this.currentWord) return
     const wd = this.currentWord
     const fontSize = Math.min(36, w * 0.07)
@@ -466,7 +467,7 @@ export class PirateHuntMode {
     }
   }
 
-  private drawTreasurePopup(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawTreasurePopup(ctx: Renderer, w: number, h: number): void {
     const alpha = Math.min(1, (60 - this.showTreasure) / 15)
     ctx.fillStyle = `rgba(0,0,0,${alpha * 0.3})`
     ctx.fillRect(0, 0, w, h)
@@ -489,7 +490,7 @@ export class PirateHuntMode {
     ctx.fillText(`+10 points!`, tx, ty + 60)
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawHUD(ctx: Renderer, w: number, h: number): void {
     ctx.fillStyle = 'rgba(0,0,0,0.3)'
     ctx.fillRect(0, 0, w, 36)
     ctx.fillStyle = '#FFD700'

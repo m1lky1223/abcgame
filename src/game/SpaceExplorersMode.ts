@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const DISCOVERIES: Record<string, string> = {
   'A': 'Asteroid Alpha', 'B': 'Blue Nebula', 'C': 'Comet Cheddar', 'D': 'Dwarf Star Doris',
@@ -38,7 +39,7 @@ export class SpaceExplorersMode extends ThemedLetterQuestMode {
     this.advanceToNextWord()
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#050510'); grad.addColorStop(1, '#0a0a2a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -63,7 +64,7 @@ export class SpaceExplorersMode extends ThemedLetterQuestMode {
     ctx.fillText(`Signal: "${this.currentWord}"`, this.canvasW * 0.88, this.canvasH * 0.08)
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#5dade2'
@@ -72,7 +73,7 @@ export class SpaceExplorersMode extends ThemedLetterQuestMode {
     ctx.fillText(`Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     const disc = DISCOVERIES[this.currentLetter]
     if (disc && this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 20px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
@@ -82,12 +83,12 @@ export class SpaceExplorersMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('⭐ Discovered! Signal to next system...', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🌌 Galactic Explorer! All 26 discovered!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

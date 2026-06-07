@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface BalloonZombie {
   x: number; y: number; letter: string
@@ -124,7 +125,7 @@ export class BalloonPopMode {
     this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a3a6e'); grad.addColorStop(0.5, '#4a7aae'); grad.addColorStop(1, '#6a9a6a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)

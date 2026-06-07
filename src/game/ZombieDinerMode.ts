@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface DinerCustomer {
   name: string
@@ -301,7 +302,7 @@ export class ZombieDinerMode {
     this.particles = this.particles.filter(p => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawCounter(ctx)
     this.drawCustomers(ctx)
@@ -349,7 +350,7 @@ export class ZombieDinerMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#2a1a0a')
     grad.addColorStop(0.5, '#3a2a1a')
@@ -364,14 +365,14 @@ export class ZombieDinerMode {
     ctx.fillRect(0, this.canvasH * 0.65, this.canvasW, 6)
   }
 
-  private drawCounter(ctx: CanvasRenderingContext2D): void {
+  private drawCounter(ctx: Renderer): void {
     ctx.fillStyle = '#8a7a6a'
     ctx.fillRect(0, this.canvasH * 0.4, this.canvasW, 8)
     ctx.fillStyle = '#6a5a4a'
     ctx.fillRect(0, this.canvasH * 0.4, this.canvasW, 3)
   }
 
-  private drawCustomers(ctx: CanvasRenderingContext2D): void {
+  private drawCustomers(ctx: Renderer): void {
     for (let i = 0; i < this.customers.length; i++) {
       const cust = this.customers[i]
       const cx = this.canvasW * (0.2 + i * 0.3)
@@ -447,7 +448,7 @@ export class ZombieDinerMode {
     }
   }
 
-  private drawIngredients(ctx: CanvasRenderingContext2D): void {
+  private drawIngredients(ctx: Renderer): void {
     for (const ing of this.ingredients) {
       if (ing.used) {
         ctx.globalAlpha = 0.2
@@ -471,7 +472,7 @@ export class ZombieDinerMode {
     }
   }
 
-  private drawTray(ctx: CanvasRenderingContext2D): void {
+  private drawTray(ctx: Renderer): void {
     const trayY = this.canvasH * 0.55
     ctx.fillStyle = '#6a5a4a'
     ctx.beginPath()
@@ -487,7 +488,7 @@ export class ZombieDinerMode {
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -500,7 +501,7 @@ export class ZombieDinerMode {
     ctx.globalAlpha = 1
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 32)
 

@@ -1,6 +1,7 @@
 import { ALL_LETTERS } from '../characters/data'
 import { drawCharacter } from '../characters/draw'
 import { GameInput, GameModeStrategy } from './GameModeStrategy'
+import { Renderer } from '../renderer/Renderer'
 
 type FighterAction = 'idle' | 'walk' | 'jump' | 'punch' | 'kick' | 'special' | 'block' | 'hit' | 'ko'
 
@@ -116,7 +117,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const shakeX = this.cameraShake > 0 ? (Math.random() - 0.5) * this.cameraShake : 0
     const shakeY = this.cameraShake > 0 ? (Math.random() - 0.5) * this.cameraShake : 0
 
@@ -403,7 +404,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     this.sparks = this.sparks.filter(s => s.life > 0)
   }
 
-  private drawStage(ctx: CanvasRenderingContext2D): void {
+  private drawStage(ctx: Renderer): void {
     const sky = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     sky.addColorStop(0, '#15192d')
     sky.addColorStop(0.48, '#26345a')
@@ -449,7 +450,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     ctx.fill()
   }
 
-  private drawFighter(ctx: CanvasRenderingContext2D, f: Fighter, isPlayer: boolean): void {
+  private drawFighter(ctx: Renderer, f: Fighter, isPlayer: boolean): void {
     ctx.save()
     ctx.translate(f.x, f.y)
     ctx.scale(f.facing, 1)
@@ -464,7 +465,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     ctx.restore()
   }
 
-  private drawLimbs(ctx: CanvasRenderingContext2D, f: Fighter): void {
+  private drawLimbs(ctx: Renderer, f: Fighter): void {
     ctx.lineCap = 'round'
     ctx.lineWidth = 8
     ctx.strokeStyle = f.action === 'special' ? '#f5b041' : '#e9eef8'
@@ -502,7 +503,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     }
   }
 
-  private drawSparks(ctx: CanvasRenderingContext2D): void {
+  private drawSparks(ctx: Renderer): void {
     for (const s of this.sparks) {
       ctx.globalAlpha = Math.max(0, s.life / 26)
       ctx.fillStyle = s.color
@@ -513,7 +514,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     ctx.globalAlpha = 1
   }
 
-  private drawHud(ctx: CanvasRenderingContext2D): void {
+  private drawHud(ctx: Renderer): void {
     this.drawHealthBar(ctx, 24, 18, this.canvasW * 0.38, this.player.health, this.player.energy, this.player.letter, true)
     this.drawHealthBar(ctx, this.canvasW - 24 - this.canvasW * 0.38, 18, this.canvasW * 0.38, this.rival.health, this.rival.energy, this.rival.letter, false)
 
@@ -548,7 +549,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
   }
 
   private drawHealthBar(
-    ctx: CanvasRenderingContext2D,
+    ctx: Renderer,
     x: number,
     y: number,
     w: number,
@@ -580,7 +581,7 @@ export class AlphabetArcadeMode implements GameModeStrategy {
     ctx.fillText(letter, alignLeft ? x : x + w, y - 2)
   }
 
-  private drawTouchHints(ctx: CanvasRenderingContext2D): void {
+  private drawTouchHints(ctx: Renderer): void {
     if (this.canvasW > 900) return
     const y = this.canvasH - 78
     const labels = [

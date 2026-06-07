@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const TREAT_WORDS: Record<string, string[]> = {
   'A': ['_PPLE PIE', 'AP_LE PIE'], 'B': ['_UTTER CAKE', 'BU_TER CAKE'], 'C': ['_ROISSANT', 'CR_ISSANT'],
@@ -30,7 +31,7 @@ export class BakeryMode extends ThemedLetterQuestMode {
     this.advanceToNextWord()
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#f5e6d0'); grad.addColorStop(1, '#e8d4b8')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -49,7 +50,7 @@ export class BakeryMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#e67e22'
@@ -58,7 +59,7 @@ export class BakeryMode extends ThemedLetterQuestMode {
     ctx.fillText(`Customer: ${ZOMBIE_NAMES[this.progressIndex % 7]}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#4a2a1a'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Order: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.55)
@@ -67,12 +68,12 @@ export class BakeryMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#e67e22'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🧁 Treat served! Next customer!', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#e67e22'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🎂 Master Baker! All 26 treats served!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

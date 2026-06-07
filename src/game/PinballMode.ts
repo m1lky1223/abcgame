@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface Peg {
   letter: string
@@ -243,7 +244,7 @@ export class PinballMode {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawBoard(ctx)
     this.drawPegs(ctx)
@@ -273,7 +274,7 @@ export class PinballMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createRadialGradient(this.canvasW / 2, this.canvasH / 2, 0, this.canvasW / 2, this.canvasH / 2, this.canvasW)
     grad.addColorStop(0, '#1a0a2e')
     grad.addColorStop(0.5, '#0f0a1a')
@@ -282,7 +283,7 @@ export class PinballMode {
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
   }
 
-  private drawBoard(ctx: CanvasRenderingContext2D): void {
+  private drawBoard(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(20, 20, 50, 0.5)'
     ctx.strokeStyle = '#5dade2'
     ctx.lineWidth = 2
@@ -296,7 +297,7 @@ export class PinballMode {
     ctx.stroke()
   }
 
-  private drawPegs(ctx: CanvasRenderingContext2D): void {
+  private drawPegs(ctx: Renderer): void {
     for (const peg of this.pegs) {
       const lit = peg.lit
       const alpha = lit ? 1 : 0.4
@@ -322,7 +323,7 @@ export class PinballMode {
     ctx.globalAlpha = 1
   }
 
-  private drawBall(ctx: CanvasRenderingContext2D): void {
+  private drawBall(ctx: Renderer): void {
     for (const t of this.trails) {
       const alpha = t.life / 20
       ctx.globalAlpha = alpha * 0.3
@@ -356,7 +357,7 @@ export class PinballMode {
     ctx.stroke()
   }
 
-  private drawPlunger(ctx: CanvasRenderingContext2D): void {
+  private drawPlunger(ctx: Renderer): void {
     const px = this.canvasW * 0.1
     const py = this.canvasH * 0.3
     const pw = 30
@@ -387,7 +388,7 @@ export class PinballMode {
     }
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 32)
 
@@ -408,7 +409,7 @@ export class PinballMode {
     ctx.fillText(`Word: ${isNaN(pct) ? 0 : pct}%`, this.canvasW - 10, 16)
   }
 
-  private drawWordPrompt(ctx: CanvasRenderingContext2D): void {
+  private drawWordPrompt(ctx: Renderer): void {
     const wx = this.canvasW / 2
     const wy = this.canvasH * 0.06
 
@@ -434,7 +435,7 @@ export class PinballMode {
     }
   }
 
-  private drawLaunchPrompt(ctx: CanvasRenderingContext2D): void {
+  private drawLaunchPrompt(ctx: Renderer): void {
     ctx.fillStyle = `rgba(255,255,255,${0.2 + Math.sin(this.frame * 0.03) * 0.15})`
     ctx.font = '14px system-ui'
     ctx.textAlign = 'center'

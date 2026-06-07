@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const STRUCTURES: Record<string, string> = {
   'A': 'Arch', 'B': 'Bench', 'C': 'Crawl Tunnel', 'D': 'Dome',
@@ -28,7 +29,7 @@ export class ConstructionSiteMode extends ThemedLetterQuestMode {
     this.spawnLetters()
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#3a4a2a'); grad.addColorStop(1, '#5a3a1a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -50,7 +51,7 @@ export class ConstructionSiteMode extends ThemedLetterQuestMode {
     ctx.fillText('🔨 Pop materials to build!', this.canvasW / 2, this.canvasH - 8)
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#f5b041'
@@ -59,19 +60,19 @@ export class ConstructionSiteMode extends ThemedLetterQuestMode {
     ctx.fillText(`🧱 ${MATERIALS[this.progressIndex % 6]}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (!this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Pop ${this.currentLetter} to build the ${STRUCTURES[this.currentLetter] || this.currentLetter}`, this.canvasW / 2, 130)
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#f5b041'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText(`CLANK! ${STRUCTURES[this.currentLetter] || this.currentLetter} built! 🚧`, this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#f5b041'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🏗️ Playground Grand Opening! All 26 built!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#58d68d'; ctx.font = '18px system-ui'

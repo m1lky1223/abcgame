@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface SceneObject {
   x: number; y: number; w: number; h: number
@@ -150,7 +151,7 @@ export class DetectiveMode {
     this.particles = this.particles.filter((p: any) => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const scene = SCENES[this.caseIndex % SCENES.length]
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a2a1a'); grad.addColorStop(1, '#2a3a2a')

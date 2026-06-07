@@ -71,6 +71,7 @@ export interface Renderer {
   translate(x: number, y: number): void;
   rotate(angle: number): void;
   scale(x: number, y: number): void;
+  setLineDash(segments: number[]): void;
 
   createLinearGradient(x0: number, y0: number, x1: number, y1: number): Gradient;
   createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): Gradient;

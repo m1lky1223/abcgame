@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface MazePos {
   row: number
@@ -345,7 +346,7 @@ export class LetterMazeMode {
     this.particles = this.particles.filter(p => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawMaze(ctx)
     this.drawLetters(ctx)
@@ -404,7 +405,7 @@ export class LetterMazeMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#0a0a1a')
     grad.addColorStop(1, '#1a0a2e')
@@ -412,7 +413,7 @@ export class LetterMazeMode {
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
   }
 
-  private drawMaze(ctx: CanvasRenderingContext2D): void {
+  private drawMaze(ctx: Renderer): void {
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         const x = this.gridX + c * this.cellW
@@ -435,7 +436,7 @@ export class LetterMazeMode {
     }
   }
 
-  private drawLetters(ctx: CanvasRenderingContext2D): void {
+  private drawLetters(ctx: Renderer): void {
     if (this.progressIndex >= 26) return
     const targetLetter = ALL_LETTERS[this.progressIndex]
     const pos = this.letters.get(targetLetter)
@@ -462,7 +463,7 @@ export class LetterMazeMode {
     ctx.fillText(targetLetter, x, y + pulse + 1)
   }
 
-  private drawZPills(ctx: CanvasRenderingContext2D): void {
+  private drawZPills(ctx: Renderer): void {
     for (const p of this.zPills) {
       const x = this.gridX + p.col * this.cellW + this.cellW / 2
       const y = this.gridY + p.row * this.cellH + this.cellH / 2
@@ -480,7 +481,7 @@ export class LetterMazeMode {
     }
   }
 
-  private drawChasers(ctx: CanvasRenderingContext2D): void {
+  private drawChasers(ctx: Renderer): void {
     for (const ch of this.chasers) {
       const x = this.gridX + ch.col * this.cellW + this.cellW / 2
       const y = this.gridY + ch.row * this.cellH + this.cellH / 2
@@ -514,7 +515,7 @@ export class LetterMazeMode {
     }
   }
 
-  private drawPlayer(ctx: CanvasRenderingContext2D): void {
+  private drawPlayer(ctx: Renderer): void {
     const x = this.gridX + this.player.col * this.cellW + this.cellW / 2
     const y = this.gridY + this.player.row * this.cellH + this.cellH / 2
 
@@ -548,7 +549,7 @@ export class LetterMazeMode {
     ctx.fillText(ALL_LETTERS[Math.min(this.progressIndex, 25)], x, y - 16)
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -561,7 +562,7 @@ export class LetterMazeMode {
     ctx.globalAlpha = 1
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, 32)
 

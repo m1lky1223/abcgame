@@ -1,5 +1,6 @@
 import { ALL_LETTERS, CHARACTERS } from '../characters/data'
 import { drawCharacter } from '../characters/draw'
+import { Renderer } from '../renderer/Renderer'
 
 interface BoothDef {
   id: number
@@ -527,7 +528,7 @@ export class CarnivalMode {
     this.candies = this.candies.filter(c => c.alive)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     ctx.fillStyle = '#1a0a2e'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -540,7 +541,7 @@ export class CarnivalMode {
     this.drawParticles(ctx)
   }
 
-  private drawBoothSelect(ctx: CanvasRenderingContext2D): void {
+  private drawBoothSelect(ctx: Renderer): void {
     ctx.fillStyle = '#fff'
     ctx.font = 'bold 32px system-ui'
     ctx.textAlign = 'center'
@@ -585,7 +586,7 @@ export class CarnivalMode {
     })
   }
 
-  private drawBooth(ctx: CanvasRenderingContext2D): void {
+  private drawBooth(ctx: Renderer): void {
     const booth = BOOTHS.find(b => b.id === this.state.currentBooth)
 
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
@@ -628,7 +629,7 @@ export class CarnivalMode {
     }
   }
 
-  private drawBalloonPop(ctx: CanvasRenderingContext2D): void {
+  private drawBalloonPop(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 22px system-ui'
     ctx.textAlign = 'center'
@@ -661,7 +662,7 @@ export class CarnivalMode {
     }
   }
 
-  private drawFireRing(ctx: CanvasRenderingContext2D): void {
+  private drawFireRing(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 22px system-ui'
     ctx.textAlign = 'center'
@@ -700,7 +701,7 @@ export class CarnivalMode {
     ctx.fillText(`Score: ${this.boothScore}/15`, this.canvasW / 2, this.canvasH - 40)
   }
 
-  private drawSortingMaze(ctx: CanvasRenderingContext2D): void {
+  private drawSortingMaze(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.6)'
     ctx.font = 'bold 18px system-ui'
     ctx.textAlign = 'center'
@@ -728,7 +729,7 @@ export class CarnivalMode {
     }
   }
 
-  private drawCandyCatch(ctx: CanvasRenderingContext2D): void {
+  private drawCandyCatch(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 20px system-ui'
     ctx.textAlign = 'center'
@@ -765,7 +766,7 @@ export class CarnivalMode {
     ctx.stroke()
   }
 
-  private drawPrankPop(ctx: CanvasRenderingContext2D): void {
+  private drawPrankPop(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 20px system-ui'
     ctx.textAlign = 'center'
@@ -787,7 +788,7 @@ export class CarnivalMode {
     }
   }
 
-  private drawDanceSequence(ctx: CanvasRenderingContext2D): void {
+  private drawDanceSequence(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 22px system-ui'
     ctx.textAlign = 'center'
@@ -825,7 +826,7 @@ export class CarnivalMode {
     }
   }
 
-  private drawMemoryMatch(ctx: CanvasRenderingContext2D): void {
+  private drawMemoryMatch(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.8)'
     ctx.font = 'bold 20px system-ui'
     ctx.textAlign = 'center'
@@ -874,7 +875,7 @@ export class CarnivalMode {
     ctx.fillText(`Matched: ${this.memoryMatched}/${this.memoryPairs}`, this.canvasW / 2, this.canvasH - 30)
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue

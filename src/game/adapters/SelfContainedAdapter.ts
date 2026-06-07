@@ -1,8 +1,9 @@
 import { GameModeStrategy, GameInput } from '../GameModeStrategy'
+import { Renderer } from '../../renderer/Renderer'
 
 export interface SelfContainedMode {
   update(): void
-  draw(ctx: CanvasRenderingContext2D): void
+  draw(ctx: Renderer): void
   handleClick?(cx: number, cy: number): void
   handleKey?(key: string): void
   handleAimStart?(cx: number, cy: number): void
@@ -54,7 +55,7 @@ export class SelfContainedAdapter implements GameModeStrategy {
     this.inner.update()
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.inner.draw(ctx)
   }
 

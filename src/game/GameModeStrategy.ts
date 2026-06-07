@@ -1,4 +1,5 @@
 import { Input } from './Input'
+import { Renderer } from '../renderer/Renderer'
 
 export interface Gesture {
   type: 'tap' | 'drag' | 'swipe' | 'longpress'
@@ -22,7 +23,7 @@ export interface GameModeStrategy {
   onStateChange?: (state: any) => void
   start(canvasW: number, canvasH: number): void
   update(input: GameInput, frame: number): void
-  draw(ctx: CanvasRenderingContext2D): void
+  draw(ctx: Renderer): void
   resize(w: number, h: number): void
   restart(canvasW: number, canvasH: number): void
   destroy(): void

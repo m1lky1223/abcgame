@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const MAIL_WORDS: Record<string, string[]> = {
   'A': ['_DDRESS', 'MA_L'], 'B': ['O_', 'BO_'], 'C': ['_ARD', 'CAR_'],
@@ -30,7 +31,7 @@ export class MailCarriersMode extends ThemedLetterQuestMode {
     this.advanceToNextWord()
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a2a4a'); grad.addColorStop(1, '#2a4a3a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -48,7 +49,7 @@ export class MailCarriersMode extends ThemedLetterQuestMode {
     ctx.fillText(this.currentLetter, this.canvasW / 2, ey + 42)
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#5dade2'
@@ -57,7 +58,7 @@ export class MailCarriersMode extends ThemedLetterQuestMode {
     ctx.fillText(`To: ${RECIPIENTS[this.progressIndex % 7]}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 24px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Stamp: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.65)
@@ -66,12 +67,12 @@ export class MailCarriersMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('✉️ Mail delivered! Next stop...', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('📫 Master Mail Carrier! All 26 delivered!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

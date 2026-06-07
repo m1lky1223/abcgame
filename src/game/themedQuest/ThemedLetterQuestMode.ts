@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../../characters/data'
 import { FloatingLetter } from '../FloatingLetter'
+import { Renderer } from '../../renderer/Renderer'
 
 export abstract class ThemedLetterQuestMode {
   protected canvasW: number
@@ -31,15 +32,15 @@ export abstract class ThemedLetterQuestMode {
 
   protected abstract initRound(): void
 
-  protected abstract drawBackground(ctx: CanvasRenderingContext2D): void
+  protected abstract drawBackground(ctx: Renderer): void
 
-  protected abstract drawHUD(ctx: CanvasRenderingContext2D): void
+  protected abstract drawHUD(ctx: Renderer): void
 
-  protected abstract drawPrompt(ctx: CanvasRenderingContext2D): void
+  protected abstract drawPrompt(ctx: Renderer): void
 
-  protected abstract drawTransitionOverlay(ctx: CanvasRenderingContext2D): void
+  protected abstract drawTransitionOverlay(ctx: Renderer): void
 
-  protected abstract drawWinnerOverlay(ctx: CanvasRenderingContext2D): void
+  protected abstract drawWinnerOverlay(ctx: Renderer): void
 
   protected getStatePayload(): Record<string, unknown> {
     return { score: this.score }
@@ -54,7 +55,7 @@ export abstract class ThemedLetterQuestMode {
   protected extraUpdate(): void {
   }
 
-  protected extraDraw(_ctx: CanvasRenderingContext2D): void {
+  protected extraDraw(_ctx: Renderer): void {
   }
 
   protected blockInput(): boolean {
@@ -172,7 +173,7 @@ export abstract class ThemedLetterQuestMode {
     this.extraUpdate()
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawHUD(ctx)
     this.drawPrompt(ctx)

@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const CREATURES: Record<string, { name: string; emoji: string }> = {
   'A': { name: 'Anemone', emoji: '🌊' }, 'B': { name: 'Barracuda', emoji: '🐟' },
@@ -54,14 +55,14 @@ export class AquariumMode extends ThemedLetterQuestMode {
     this.bubbles = this.bubbles.filter(b => b.y > -10)
   }
 
-  protected extraDraw(ctx: CanvasRenderingContext2D): void {
+  protected extraDraw(ctx: Renderer): void {
     for (const b of this.bubbles) {
       ctx.strokeStyle = `rgba(150,200,255,${0.2 + Math.sin(b.y * 0.1) * 0.1})`
       ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2); ctx.stroke()
     }
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#0a2a4a'); grad.addColorStop(0.5, '#0a3a6a'); grad.addColorStop(1, '#0a4a3a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -80,7 +81,7 @@ export class AquariumMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#5dade2'
@@ -89,7 +90,7 @@ export class AquariumMode extends ThemedLetterQuestMode {
     ctx.fillText(`Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 24px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Name: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.55)
@@ -98,12 +99,12 @@ export class AquariumMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🐬 Creature discovered! Next tank!', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#5dade2'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🐳 Ocean Explorer! All 26 discovered!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

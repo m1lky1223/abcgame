@@ -1,4 +1,5 @@
 import { CHARACTERS, ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface RunnerOddbod {
   name: string
@@ -417,7 +418,7 @@ export class LetterRunnerMode {
     this.obstacles = this.obstacles.filter(o => !o.passed)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     if (this.showSelect) {
       this.drawSelectScreen(ctx)
       return
@@ -437,7 +438,7 @@ export class LetterRunnerMode {
     if (this.state.won) this.drawWinScreen(ctx)
   }
 
-  private drawSelectScreen(ctx: CanvasRenderingContext2D): void {
+  private drawSelectScreen(ctx: Renderer): void {
     ctx.fillStyle = '#0b0e17'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -487,7 +488,7 @@ export class LetterRunnerMode {
     ctx.fillText(`High Score: ${this.highScore}`, this.canvasW / 2, this.canvasH - 40)
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#1a2a4e')
     grad.addColorStop(0.6, '#3a4a6e')
@@ -496,7 +497,7 @@ export class LetterRunnerMode {
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
   }
 
-  private drawBuildings(ctx: CanvasRenderingContext2D): void {
+  private drawBuildings(ctx: Renderer): void {
     const buildingColors = ['#2a2a4a', '#3a2a3a', '#2a3a3a', '#3a3a2a']
     for (let i = -2; i < 10; i++) {
       const bx = i * 120 - (this.buildingOffset % 120)
@@ -511,7 +512,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawGround(ctx: CanvasRenderingContext2D): void {
+  private drawGround(ctx: Renderer): void {
     ctx.fillStyle = '#3a5a3a'
     ctx.fillRect(0, this.groundY, this.canvasW, this.canvasH - this.groundY)
     ctx.fillStyle = '#4a6a4a'
@@ -523,7 +524,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawCollectibles(ctx: CanvasRenderingContext2D): void {
+  private drawCollectibles(ctx: Renderer): void {
     for (const c of this.collectibles) {
       if (c.collected) continue
       const bob = Math.sin(this.frame * 0.05) * 3
@@ -543,7 +544,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawRunner(ctx: CanvasRenderingContext2D): void {
+  private drawRunner(ctx: Renderer): void {
     const oddbod = this.getOddbod()
     const r = 20
     const bounce = this.onGround ? Math.sin(this.frame * 0.15) * 2 : 0
@@ -591,7 +592,7 @@ export class LetterRunnerMode {
     ctx.restore()
   }
 
-  private drawChasers(ctx: CanvasRenderingContext2D): void {
+  private drawChasers(ctx: Renderer): void {
     for (const ch of this.chasers) {
       if (!ch.alive) continue
       const chaser = CHASER_TYPES[ch.type]
@@ -624,7 +625,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawObstacles(ctx: CanvasRenderingContext2D): void {
+  private drawObstacles(ctx: Renderer): void {
     for (const o of this.obstacles) {
       if (o.passed) continue
       if (o.type === 'puddle') {
@@ -642,7 +643,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -655,7 +656,7 @@ export class LetterRunnerMode {
     ctx.globalAlpha = 1
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, 34)
     ctx.fillStyle = '#fff'
@@ -687,7 +688,7 @@ export class LetterRunnerMode {
     }
   }
 
-  private drawGameOver(ctx: CanvasRenderingContext2D): void {
+  private drawGameOver(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.6)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#e74c5c'
@@ -706,7 +707,7 @@ export class LetterRunnerMode {
     ctx.fillText('Press SPACE or click to restart', this.canvasW / 2, this.canvasH / 2 + 70)
   }
 
-  private drawWinScreen(ctx: CanvasRenderingContext2D): void {
+  private drawWinScreen(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#58d68d'

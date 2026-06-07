@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface KartOddbod {
   name: string
@@ -398,7 +399,7 @@ export class OddbodKartRacer {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     if (this.phase === 'select') {
       this.drawSelectScreen(ctx)
       return
@@ -422,7 +423,7 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawSelectScreen(ctx: CanvasRenderingContext2D): void {
+  private drawSelectScreen(ctx: Renderer): void {
     ctx.fillStyle = '#0b0e17'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -472,7 +473,7 @@ export class OddbodKartRacer {
     ctx.fillText(`Best Score: ${this.highScore}`, this.canvasW / 2, this.canvasH - 40)
   }
 
-  private drawRoad(ctx: CanvasRenderingContext2D): void {
+  private drawRoad(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#2a4a2a')
     grad.addColorStop(0.05, '#3a5a3a')
@@ -517,7 +518,7 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawPlayerKart(ctx: CanvasRenderingContext2D): void {
+  private drawPlayerKart(ctx: Renderer): void {
     const oddbod = this.getOddbod()
     const kx = this.laneXs[this.playerLane]
     const ky = this.canvasH * 0.7
@@ -583,7 +584,7 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawAIKarts(ctx: CanvasRenderingContext2D): void {
+  private drawAIKarts(ctx: Renderer): void {
     for (let i = 0; i < 3; i++) {
       if (this.aiFinished[i]) continue
       const aiProgressRatio = this.aiProgress[i] / RACE_DISTANCE
@@ -634,7 +635,7 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawObstacles(ctx: CanvasRenderingContext2D): void {
+  private drawObstacles(ctx: Renderer): void {
     const playerY = this.canvasH * 0.7
     for (const obs of this.obstacles) {
       if (obs.passed || obs.hit) continue
@@ -666,7 +667,7 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawPrompt(ctx: CanvasRenderingContext2D): void {
+  private drawPrompt(ctx: Renderer): void {
     if (!this.currentPrompt || this.currentPrompt.answered) return
     const bx = this.laneXs[this.playerLane]
     const by = this.canvasH * 0.7 - 70
@@ -705,7 +706,7 @@ export class OddbodKartRacer {
     ctx.restore()
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, 32)
 
@@ -778,14 +779,14 @@ export class OddbodKartRacer {
     }
   }
 
-  private drawSpeedEffects(ctx: CanvasRenderingContext2D): void {
+  private drawSpeedEffects(ctx: Renderer): void {
     for (const sl of this.speedLines) {
       ctx.fillStyle = `rgba(255,255,255,${0.05 + 0.1 * (sl.speed / 6)})`
       ctx.fillRect(sl.x, sl.y, 3, sl.length)
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -798,7 +799,7 @@ export class OddbodKartRacer {
     ctx.globalAlpha = 1
   }
 
-  private drawCountdown(ctx: CanvasRenderingContext2D): void {
+  private drawCountdown(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -813,7 +814,7 @@ export class OddbodKartRacer {
     ctx.fillText(num > 3 ? 'GO!' : String(num), this.canvasW / 2, this.canvasH / 2)
   }
 
-  private drawFinishScreen(ctx: CanvasRenderingContext2D): void {
+  private drawFinishScreen(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.6)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 

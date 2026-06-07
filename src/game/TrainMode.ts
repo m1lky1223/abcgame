@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const CARGO_WORDS: Record<string, string[]> = {
   'A': ['_PPLES', 'A_PLES'], 'B': ['_ANANAS', 'BA_ANAS'], 'C': ['_ARGO', 'CA_GO'],
@@ -44,7 +45,7 @@ export class TrainMode extends ThemedLetterQuestMode {
     this.trainLength++
   }
 
-  protected extraDraw(ctx: CanvasRenderingContext2D): void {
+  protected extraDraw(ctx: Renderer): void {
     const engineX = 30; const engineY = this.canvasH * 0.65
     ctx.fillStyle = '#e74c5c'; ctx.fillRect(engineX, engineY, 40, 30)
     ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.moveTo(engineX + 40, engineY); ctx.lineTo(engineX + 50, engineY - 15); ctx.lineTo(engineX + 40, engineY - 15); ctx.closePath(); ctx.fill()
@@ -62,14 +63,14 @@ export class TrainMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#4a8abd'); grad.addColorStop(1, '#6a9a6a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#5a4a3a'; ctx.fillRect(0, this.canvasH * 0.75, this.canvasW, 8)
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#f5b041'
@@ -78,7 +79,7 @@ export class TrainMode extends ThemedLetterQuestMode {
     ctx.fillText(`Cars: ${this.trainLength}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 26px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`Load cargo: "${this.currentWord}"`, this.canvasW / 2, this.canvasH * 0.35)
@@ -87,12 +88,12 @@ export class TrainMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#f5b041'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🚂 CHOO-CHOO! Cargo loaded! Next stop!', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#f5b041'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🚂 All Aboard! Alphabet Train complete!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#58d68d'; ctx.font = '18px system-ui'

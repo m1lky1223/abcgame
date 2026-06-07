@@ -4,6 +4,7 @@ import { generateGeminiConfig } from '../game/adapters/GeminiClient'
 import { DynamicPromptStrategy } from '../game/strategies/DynamicPromptStrategy'
 import { GameInput } from '../game/GameModeStrategy'
 import type { DynamicGameConfig } from '../game/adapters/LocalGenerator'
+import { Canvas2DRenderer } from '../renderer/Canvas2DRenderer'
 
 // ─── LocalGenerator ───────────────────────────────────────────────────────────
 
@@ -554,7 +555,8 @@ describe('DynamicPromptStrategy', () => {
 
   it('renders without errors', () => {
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => strategy.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => strategy.draw(renderer)).not.toThrow()
   })
 
   it('pops a letter on tap at its location', () => {
@@ -763,7 +765,8 @@ describe('DynamicPromptStrategy - Shooter Mode', () => {
 
   it('renders shooter without errors', () => {
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => strategy.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => strategy.draw(renderer)).not.toThrow()
   })
 })
 
@@ -820,7 +823,8 @@ describe('DynamicPromptStrategy - Survival Mode', () => {
 
   it('renders survival HUD without errors', () => {
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => strategy.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => strategy.draw(renderer)).not.toThrow()
   })
 })
 
@@ -865,7 +869,8 @@ describe('DynamicPromptStrategy - Theme Backgrounds', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders volcano background without errors', () => {
@@ -875,7 +880,8 @@ describe('DynamicPromptStrategy - Theme Backgrounds', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders all backgrounds without errors', () => {
@@ -895,7 +901,8 @@ describe('DynamicPromptStrategy - Theme Backgrounds', () => {
       const s = new DynamicPromptStrategy(800, 600, config)
       s.start(800, 600)
       const ctx = document.createElement('canvas').getContext('2d')!
-      expect(() => s.draw(ctx)).not.toThrow()
+      const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
     }
   })
 })
@@ -909,7 +916,8 @@ describe('DynamicPromptStrategy - Enemies', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders meteor obstacles without errors', () => {
@@ -920,7 +928,8 @@ describe('DynamicPromptStrategy - Enemies', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders ghost obstacles without errors', () => {
@@ -931,7 +940,8 @@ describe('DynamicPromptStrategy - Enemies', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 })
 
@@ -950,7 +960,8 @@ describe('DynamicPromptStrategy - Projectile Types', () => {
       vx: 2, vy: -2, type: 'water', alive: true,
     })
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders fireball projectiles without errors', () => {
@@ -967,7 +978,8 @@ describe('DynamicPromptStrategy - Projectile Types', () => {
       vx: 2, vy: -2, type: 'fireball', alive: true,
     })
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders laser projectiles without errors', () => {
@@ -984,7 +996,8 @@ describe('DynamicPromptStrategy - Projectile Types', () => {
       vx: 2, vy: -2, type: 'laser', alive: true,
     })
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders seed projectiles without errors', () => {
@@ -1001,7 +1014,8 @@ describe('DynamicPromptStrategy - Projectile Types', () => {
       vx: 2, vy: -2, type: 'seed', alive: true,
     })
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 })
 
@@ -1013,10 +1027,11 @@ describe('DynamicPromptStrategy - Letter Behaviors', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
     const input = makeInput()
     s.update(input, 1)
-    expect(() => s.draw(ctx)).not.toThrow()
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders float_up behavior without errors', () => {
@@ -1025,10 +1040,11 @@ describe('DynamicPromptStrategy - Letter Behaviors', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
     const input = makeInput()
     s.update(input, 1)
-    expect(() => s.draw(ctx)).not.toThrow()
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 
   it('renders sine_wave behavior without errors', () => {
@@ -1037,10 +1053,11 @@ describe('DynamicPromptStrategy - Letter Behaviors', () => {
     const s = new DynamicPromptStrategy(800, 600, config)
     s.start(800, 600)
     const ctx = document.createElement('canvas').getContext('2d')!
-    expect(() => s.draw(ctx)).not.toThrow()
+    const renderer = new Canvas2DRenderer(ctx, 800, 600)
+    expect(() => s.draw(renderer)).not.toThrow()
     const input = makeInput()
     s.update(input, 1)
-    expect(() => s.draw(ctx)).not.toThrow()
+    expect(() => s.draw(renderer)).not.toThrow()
   })
 })
 

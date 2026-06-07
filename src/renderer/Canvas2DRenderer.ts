@@ -252,6 +252,10 @@ export class Canvas2DRenderer implements Renderer {
     this.ctx.scale(x, y);
   }
 
+  setLineDash(segments: number[]): void {
+    this.ctx.setLineDash(segments);
+  }
+
   createLinearGradient(x0: number, y0: number, x1: number, y1: number): Gradient {
     return this.ctx.createLinearGradient(x0, y0, x1, y1);
   }

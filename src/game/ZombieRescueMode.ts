@@ -1,6 +1,7 @@
 import { CHARACTERS, ALL_LETTERS } from '../characters/data'
 import { drawCharacter } from '../characters/draw'
 import { FloatingLetter } from './FloatingLetter'
+import { Renderer } from '../renderer/Renderer'
 
 interface RescueRoom {
   name: string
@@ -321,7 +322,7 @@ export class ZombieRescueMode {
     this.pulseTimer++
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.drawBackground(ctx)
     this.drawCages(ctx)
     this.drawZombies(ctx)
@@ -341,7 +342,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D): void {
+  private drawBackground(ctx: Renderer): void {
     const room = ROOMS[this.state.currentRoom]
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, room.bgGradient[0])
@@ -368,7 +369,7 @@ export class ZombieRescueMode {
     ctx.fillRect(0, this.canvasH * 0.65, this.canvasW, 3)
   }
 
-  private drawCages(ctx: CanvasRenderingContext2D): void {
+  private drawCages(ctx: Renderer): void {
     for (const cage of this.cages) {
       const cx = cage.x
       const cy = cage.y
@@ -420,7 +421,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawZombies(ctx: CanvasRenderingContext2D): void {
+  private drawZombies(ctx: Renderer): void {
     for (const z of this.zombies) {
       if (!z.alive) continue
       const design = ZOMBIE_WARDEN[z.designIndex]
@@ -470,7 +471,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawFloatingLetters(ctx: CanvasRenderingContext2D): void {
+  private drawFloatingLetters(ctx: Renderer): void {
     for (const letter of this.floatingLetters) {
       if (!letter.collected) {
         letter.draw(ctx, this.pulseTimer)
@@ -480,7 +481,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawWordPrompts(ctx: CanvasRenderingContext2D): void {
+  private drawWordPrompts(ctx: Renderer): void {
     for (const cage of this.cages) {
       if (cage.freed) continue
       const cx = cage.x + 30
@@ -508,7 +509,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -521,7 +522,7 @@ export class ZombieRescueMode {
     ctx.globalAlpha = 1
   }
 
-  private drawFreedLetters(ctx: CanvasRenderingContext2D): void {
+  private drawFreedLetters(ctx: Renderer): void {
     for (const fl of this.freedLetters) {
       const alpha = 1 - fl.life / 60
       if (alpha <= 0) continue
@@ -541,7 +542,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawPowerUps(ctx: CanvasRenderingContext2D): void {
+  private drawPowerUps(ctx: Renderer): void {
     const pw = POWER_UPS
     const startX = this.canvasW - 170
     const startY = this.canvasH - 50
@@ -558,7 +559,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D): void {
+  private drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, this.canvasW, 34)
     ctx.fillStyle = '#fff'
@@ -583,7 +584,7 @@ export class ZombieRescueMode {
     }
   }
 
-  private drawRoomTransition(ctx: CanvasRenderingContext2D): void {
+  private drawRoomTransition(ctx: Renderer): void {
     const alpha = Math.min(1, this.roomTransition / 30)
     ctx.fillStyle = `rgba(0,0,0,${alpha * 0.6})`
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -598,7 +599,7 @@ export class ZombieRescueMode {
     ctx.fillText(`Next: ${nextRoom?.name || 'Final Room'}`, this.canvasW / 2, this.canvasH / 2 + 24)
   }
 
-  private drawWinScreen(ctx: CanvasRenderingContext2D): void {
+  private drawWinScreen(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.6)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#58d68d'

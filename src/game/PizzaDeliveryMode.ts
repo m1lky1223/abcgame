@@ -1,5 +1,6 @@
 import { ALL_LETTERS } from '../characters/data'
 import { ThemedLetterQuestMode } from './themedQuest/ThemedLetterQuestMode'
+import { Renderer } from '../renderer/Renderer'
 
 const PIZZA_WORDS: Record<string, string[]> = {
   'C': ['_ORN', 'CHEESE'], 'H': ['AM', 'H_OT'], 'M': ['_USHROOM', 'MOZZARELLA'],
@@ -36,12 +37,12 @@ export class PizzaDeliveryMode extends ThemedLetterQuestMode {
     this.pizzaProgress++
   }
 
-  protected extraDraw(ctx: CanvasRenderingContext2D): void {
+  protected extraDraw(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.font = '11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'
     ctx.fillText('Pop the right pizza topping! Press letter keys for bonus', this.canvasW / 2, this.canvasH - 8)
   }
 
-  protected drawBackground(ctx: CanvasRenderingContext2D): void {
+  protected drawBackground(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#2a1a0a'); grad.addColorStop(0.5, '#4a2a1a'); grad.addColorStop(1, '#6a3a2a')
     ctx.fillStyle = grad; ctx.fillRect(0, 0, this.canvasW, this.canvasH)
@@ -61,7 +62,7 @@ export class PizzaDeliveryMode extends ThemedLetterQuestMode {
     ctx.fillText(this.currentLetter, cx, cy)
   }
 
-  protected drawHUD(ctx: CanvasRenderingContext2D): void {
+  protected drawHUD(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, this.canvasW, 32)
     ctx.fillStyle = '#fff'; ctx.font = 'bold 14px system-ui'; ctx.textBaseline = 'middle'
     ctx.textAlign = 'left'; ctx.fillStyle = '#e74c5c'
@@ -70,7 +71,7 @@ export class PizzaDeliveryMode extends ThemedLetterQuestMode {
     ctx.fillText(`Zombie: ${ZOMBIE_EMOJIS[this.progressIndex % 7]}  Score: ${this.score}`, this.canvasW - 12, 16)
   }
 
-  protected drawPrompt(ctx: CanvasRenderingContext2D): void {
+  protected drawPrompt(ctx: Renderer): void {
     if (this.currentWord && !this.correctFlash && !this.transition) {
       ctx.fillStyle = '#fff'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'
       ctx.fillText(`I want ${this.currentWord} pizza!`, this.canvasW / 2, 80)
@@ -79,12 +80,12 @@ export class PizzaDeliveryMode extends ThemedLetterQuestMode {
     }
   }
 
-  protected drawTransitionOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawTransitionOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#e74c5c'; ctx.font = 'bold 22px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🍕 Pizza served! Next order...', this.canvasW / 2, this.canvasH / 2)
   }
 
-  protected drawWinnerOverlay(ctx: CanvasRenderingContext2D): void {
+  protected drawWinnerOverlay(ctx: Renderer): void {
     ctx.fillStyle = '#e74c5c'; ctx.font = 'bold 28px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText('🍕 Pizza Party! All orders complete!', this.canvasW / 2, this.canvasH / 2 - 20)
     ctx.fillStyle = '#f5b041'; ctx.font = '18px system-ui'

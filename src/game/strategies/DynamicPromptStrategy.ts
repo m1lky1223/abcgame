@@ -4,6 +4,7 @@ import { drawCharacter } from '../../characters/draw'
 import { CHARACTERS } from '../../characters/data'
 import { ZombieChaser } from '../ZombieChaser'
 import { OddbodChaser } from '../OddbodChaser'
+import { Renderer } from '../../renderer/Renderer'
 
 // Structural alignment with FloatingLetter so Zombie/Oddbod chasers can interact
 class DynamicLetter {
@@ -197,7 +198,7 @@ class DynamicLetter {
     return false
   }
 
-  draw(ctx: CanvasRenderingContext2D, frame: number): void {
+  draw(ctx: Renderer, frame: number): void {
     if (!this.collected) {
       const bob = this.behavior === 'sine_wave' ? 0 : Math.sin((frame + this.bobPhase) * 0.03) * 6
       const pulse = this.correctPulse > 0 ? 1 + Math.sin(this.correctPulse * 0.3) * 0.15 : 0
@@ -273,7 +274,7 @@ class MeteorObstacle {
     return dx * dx + dy * dy <= this.size * this.size
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     // Draw trail
     this.particles.forEach(p => {
       const alpha = 1 - p.life / p.maxLife
@@ -341,7 +342,7 @@ class GhostObstacle {
     return dx * dx + dy * dy <= this.size * this.size
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const opacity = 0.3 + Math.sin(this.opacityPhase) * 0.25
     ctx.globalAlpha = opacity
 
@@ -910,7 +911,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const w = this.canvasW
     const h = this.canvasH
 
@@ -994,7 +995,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     this.drawHUD(ctx)
   }
 
-  private drawBackgroundEffects(ctx: CanvasRenderingContext2D) {
+  private drawBackgroundEffects(ctx: Renderer) {
     const effect = this.config.theme.specialEffects
     if (effect === 'none') return
 
@@ -1047,7 +1048,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     ctx.globalAlpha = 1.0
   }
 
-  private drawSpellingBoard(ctx: CanvasRenderingContext2D) {
+  private drawSpellingBoard(ctx: Renderer) {
     const letters = this.config.letters.customLetters || []
     const boxSize = 36
     const gap = 8
@@ -1071,7 +1072,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     }
   }
 
-  private drawShooterLauncher(ctx: CanvasRenderingContext2D) {
+  private drawShooterLauncher(ctx: Renderer) {
     const x = this.canvasW / 2
     const y = this.canvasH - 5
     
@@ -1103,7 +1104,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     }
   }
 
-  private drawProjectile(ctx: CanvasRenderingContext2D, p: Projectile) {
+  private drawProjectile(ctx: Renderer, p: Projectile) {
     ctx.beginPath()
     
     switch (p.type) {
@@ -1138,7 +1139,7 @@ export class DynamicPromptStrategy implements GameModeStrategy {
     }
   }
 
-  private drawHUD(ctx: CanvasRenderingContext2D) {
+  private drawHUD(ctx: Renderer) {
     const w = this.canvasW
     const pad = 12
 

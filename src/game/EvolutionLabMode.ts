@@ -1,5 +1,6 @@
 import { CHARACTERS, ALL_LETTERS } from '../characters/data'
 import { FloatingLetter } from './FloatingLetter'
+import { Renderer } from '../renderer/Renderer'
 
 interface Evolution {
   level: number
@@ -234,7 +235,7 @@ export class EvolutionLabMode {
     this.particles = this.particles.filter(p => p.life < p.maxLife)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     ctx.fillStyle = '#0a0a1e'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -254,7 +255,7 @@ export class EvolutionLabMode {
     if (this.state.winner) this.drawWinScreen(ctx)
   }
 
-  private drawPlayScreen(ctx: CanvasRenderingContext2D): void {
+  private drawPlayScreen(ctx: Renderer): void {
     const grad = ctx.createLinearGradient(0, 0, 0, this.canvasH)
     grad.addColorStop(0, '#0a0a2e')
     grad.addColorStop(1, '#1a1a3e')
@@ -290,7 +291,7 @@ export class EvolutionLabMode {
     ctx.fillText('🔬 [LAB]', this.canvasW - 60, this.canvasH - 40)
   }
 
-  private drawLabScreen(ctx: CanvasRenderingContext2D): void {
+  private drawLabScreen(ctx: Renderer): void {
     ctx.fillStyle = '#0b0e1a'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
 
@@ -418,7 +419,7 @@ export class EvolutionLabMode {
     this.drawMessage(ctx)
   }
 
-  private drawGallery(ctx: CanvasRenderingContext2D): void {
+  private drawGallery(ctx: Renderer): void {
     ctx.fillStyle = '#0b0e1a'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#fff'
@@ -472,7 +473,7 @@ export class EvolutionLabMode {
     ctx.fillText('Click to return to game', this.canvasW / 2, this.canvasH - 30)
   }
 
-  private drawParticles(ctx: CanvasRenderingContext2D): void {
+  private drawParticles(ctx: Renderer): void {
     for (const p of this.particles) {
       const alpha = 1 - p.life / p.maxLife
       if (alpha <= 0) continue
@@ -485,7 +486,7 @@ export class EvolutionLabMode {
     ctx.globalAlpha = 1
   }
 
-  private drawMessage(ctx: CanvasRenderingContext2D): void {
+  private drawMessage(ctx: Renderer): void {
     if (this.messageTimer <= 0) return
     ctx.fillStyle = `rgba(255,255,255,${Math.min(1, this.messageTimer / 15)})`
     ctx.font = 'bold 16px system-ui'
@@ -494,7 +495,7 @@ export class EvolutionLabMode {
     ctx.fillText(this.message, this.canvasW / 2, this.canvasH - 80)
   }
 
-  private drawWinScreen(ctx: CanvasRenderingContext2D): void {
+  private drawWinScreen(ctx: Renderer): void {
     ctx.fillStyle = 'rgba(0,0,0,0.6)'
     ctx.fillRect(0, 0, this.canvasW, this.canvasH)
     ctx.fillStyle = '#58d68d'

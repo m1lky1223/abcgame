@@ -1,4 +1,5 @@
 import { ALL_LETTERS } from '../characters/data'
+import { Renderer } from '../renderer/Renderer'
 
 interface OddbodShooter {
   name: string; weapon: string; fireRate: number; damage: number
@@ -298,7 +299,7 @@ export class ShootingGalleryMode {
     })
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     const w = this.canvasW; const h = this.canvasH
 
     const grad = ctx.createLinearGradient(0, 0, 0, h)

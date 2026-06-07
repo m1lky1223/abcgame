@@ -5,6 +5,7 @@ import { Background } from '../Background'
 import { ALL_LETTERS } from '../../characters/data'
 import { WORDS, WordEntry } from '../words'
 import { GameInput } from '../GameModeStrategy'
+import { Renderer } from '../../renderer/Renderer'
 
 const WIN_SCORE = 26
 
@@ -13,7 +14,7 @@ interface Chaser {
   isDone: boolean
   caughtLetter: FloatingLetter | null
   update(letters: FloatingLetter[]): string | null
-  draw(ctx: CanvasRenderingContext2D): void
+  draw(ctx: Renderer): void
   containsPoint(mx: number, my: number): boolean
 }
 
@@ -410,7 +411,7 @@ export class LetterPopCore {
     })
   }
 
-  draw(ctx: CanvasRenderingContext2D, frame: number): void {
+  draw(ctx: Renderer, frame: number): void {
     const w = this.canvasW
     const h = this.canvasH
 
@@ -443,7 +444,7 @@ export class LetterPopCore {
     }
   }
 
-  private drawModeHUD(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawModeHUD(ctx: Renderer, w: number, _h: number): void {
     ctx.fillStyle = 'rgba(0,0,0,0.5)'
     ctx.fillRect(0, 0, w, 36)
     ctx.fillStyle = '#fff'
@@ -495,7 +496,7 @@ export class LetterPopCore {
     }
   }
 
-  private drawWordPrompt(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawWordPrompt(ctx: Renderer, w: number, _h: number): void {
     if (!this.currentWord) return
     const wd = this.currentWord
     const gap = 12
@@ -548,7 +549,7 @@ export class LetterPopCore {
     ctx.fillText('Pop the missing letter!', w / 2, wordY + fontSize + 12)
   }
 
-  private drawWordRacePrompt(ctx: CanvasRenderingContext2D, w: number, _h: number): void {
+  private drawWordRacePrompt(ctx: Renderer, w: number, _h: number): void {
     if (!this.currentWord) return
     const wd = this.currentWord
     const fontSize = Math.min(36, w * 0.06)
@@ -587,7 +588,7 @@ export class LetterPopCore {
     }
   }
 
-  private drawCelebration(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  private drawCelebration(ctx: Renderer, w: number, h: number): void {
     const alpha = this.correctFlash < 20 ? this.correctFlash / 20 : 1
     ctx.globalAlpha = alpha * 0.2
     ctx.fillStyle = '#f5b041'

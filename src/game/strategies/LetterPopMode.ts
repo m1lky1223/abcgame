@@ -1,5 +1,6 @@
 import { GameModeStrategy, GameInput } from '../GameModeStrategy'
 import { LetterPopCore, PopSubMode } from './LetterPopCore'
+import { Renderer } from '../../renderer/Renderer'
 
 export class LetterPopMode implements GameModeStrategy {
   onStateChange?: (state: any) => void
@@ -20,7 +21,7 @@ export class LetterPopMode implements GameModeStrategy {
     this.core.update(frame, input)
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: Renderer): void {
     this.core.draw(ctx, this.frame)
   }
 
