@@ -29,9 +29,16 @@ export interface GameModeStrategy {
   destroy(): void
 }
 
+export interface InputRect {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
 const SWIPE_THRESHOLD = 30
 
-export function buildGameInput(input: Input, rect: DOMRect): GameInput {
+export function buildGameInput(input: Input, rect: InputRect): GameInput {
   const gestures: Gesture[] = []
 
   if (input.mouseJustPressed) {

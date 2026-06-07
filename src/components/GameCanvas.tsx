@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Engine, GameState, GameMode } from '../game/Engine'
+import { Canvas2DRenderer } from '../renderer/Canvas2DRenderer'
 
 interface GameCanvasProps {
   onReady: (engine: Engine) => void
@@ -16,7 +17,9 @@ export default function GameCanvas({ onReady, onStateChange, mode, customConfig 
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
 
-    const engine = new Engine(canvas, mode, customConfig)
+    const ctx = canvas.getContext('2d')!
+    const renderer = new Canvas2DRenderer(ctx, canvas.width, canvas.height)
+    const engine = new Engine(renderer, canvas, mode, customConfig)
     engine.onStateChange = onStateChange
     engine.start()
     onReady(engine)

@@ -1,5 +1,6 @@
 import { Input } from './Input'
-import { GameModeStrategy, buildGameInput } from './GameModeStrategy'
+import { GameModeStrategy, buildGameInput, InputRect } from './GameModeStrategy'
+import { Renderer } from '../renderer/Renderer'
 import { SelfContainedAdapter, SelfContainedMode } from './adapters/SelfContainedAdapter'
 import { LetterPopMode } from './strategies/LetterPopMode'
 import { PopSubMode } from './strategies/LetterPopCore'
@@ -115,9 +116,13 @@ function createStrategy(mode: GameMode, canvasW: number, canvasH: number, custom
   return new LetterPopMode(canvasW, canvasH, 'free')
 }
 
+export interface InputBoundsProvider {
+  getBoundingClientRect(): InputRect
+}
+
 export class Engine {
-  private canvas: HTMLCanvasElement
-  private ctx: CanvasRenderingContext2D
+  private renderer: Renderer
+  private boundsProvider: InputBoundsProvider
   private input: Input
   private strategy: GameModeStrategy
   private frame = 0
@@ -128,11 +133,16 @@ export class Engine {
   onStateChange?: (state: GameState) => void
   onGameOver?: (winner: 'human' | 'oddbods') => void
 
-  constructor(canvas: HTMLCanvasElement, mode: GameMode = 'free', customConfig?: any) {
-    this.canvas = canvas
-    this.ctx = canvas.getContext('2d')!
+  constructor(
+    renderer: Renderer,
+    boundsProvider: InputBoundsProvider,
+    mode: GameMode = 'free',
+    customConfig?: any
+  ) {
+    this.renderer = renderer
+    this.boundsProvider = boundsProvider
     this.input = new Input()
-    this.strategy = createStrategy(mode, canvas.width, canvas.height, customConfig)
+    this.strategy = createStrategy(mode, renderer.width, renderer.height, customConfig)
     this.state.mode = mode
     this.strategy.onStateChange = this.handleStrategyState
     this.loop = this.loop.bind(this)
@@ -157,7 +167,7 @@ export class Engine {
 
   start(): void {
     this.input.attach()
-    this.strategy.start(this.canvas.width, this.canvas.height)
+    this.strategy.start(this.renderer.width, this.renderer.height)
     this.running = true
     this.onStateChange?.(this.state)
     this.loop()
@@ -171,7 +181,7 @@ export class Engine {
 
   restart(): void {
     this.state = { score: 0, collectedSet: new Set(), totalCollected: 0, mode: this.state.mode, wordsCompleted: 0, oddScore: 0, winner: null }
-    this.strategy.restart(this.canvas.width, this.canvas.height)
+    this.strategy.restart(this.renderer.width, this.renderer.height)
     this.running = true
     this.onStateChange?.(this.state)
     this.input.detach()
@@ -181,8 +191,7 @@ export class Engine {
   }
 
   resize(w: number, h: number): void {
-    this.canvas.width = w
-    this.canvas.height = h
+    this.renderer.resize(w, h)
     this.strategy.resize(w, h)
   }
 
@@ -200,20 +209,20 @@ export class Engine {
       if (this.input.wasPressed(' ')) this.restart()
       return
     }
-    const rect = this.canvas.getBoundingClientRect()
+    const rect = this.boundsProvider.getBoundingClientRect()
     const gameInput = buildGameInput(this.input, rect)
     this.strategy.update(gameInput, this.frame)
   }
 
   private draw(): void {
-    const ctx = this.ctx
-    const w = this.canvas.width
-    const h = this.canvas.height
-    ctx.clearRect(0, 0, w, h)
-    this.strategy.draw(ctx)
+    const r = this.renderer
+    const w = r.width
+    const h = r.height
+    r.clearRect(0, 0, w, h)
+    this.strategy.draw(r)
     if (this.state.winner) {
-      ctx.fillStyle = 'rgba(0,0,0,0.5)'
-      ctx.fillRect(0, 0, w, h)
+      r.fillStyle = 'rgba(0,0,0,0.5)'
+      r.fillRect(0, 0, w, h)
     }
   }
 }
