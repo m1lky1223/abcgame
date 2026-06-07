@@ -37,12 +37,14 @@ created: 2026-06-07
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 1-01-01 | 01 | 1 | REND-01 | — | N/A | unit | `npx vitest run src/__tests__/Canvas2DRenderer.test.ts` | ❌ W0 | ⬜ pending |
-| 1-01-02 | 01 | 1 | REND-02 | — | N/A | unit | `npx vitest run src/__tests__/Canvas2DRenderer.test.ts` | ❌ W0 | ⬜ pending |
-| 1-02-01 | 02 | 2 | REND-03 | — | N/A | unit | `npx vitest run src/__tests__/characters.test.ts` | ✅ | ⬜ pending |
-| 1-02-02 | 02 | 2 | REND-03 | — | N/A | unit | `npx vitest run src/__tests__/Input.test.ts` | ✅ | ⬜ pending |
-| 1-03-01 | 03 | 3 | REND-04 | — | N/A | unit | `npm run lint` | ✅ | ⬜ pending |
-| 1-03-02 | 03 | 3 | REND-04 | — | N/A | integration | `npm run test:smoke` | ✅ | ⬜ pending |
+| 1-01-01 | 01 | 1 | REND-02 | — | N/A | unit | `test -f src/__tests__/Canvas2DRenderer.test.ts` | ❌ W0 | ⬜ pending |
+| 1-01-02 | 01 | 1 | REND-01 | — | N/A | unit | `test -f src/renderer/Renderer.ts && npx tsc --noEmit src/renderer/Renderer.ts` | ❌ W0 | ⬜ pending |
+| 1-01-03 | 01 | 1 | REND-02 | — | N/A | unit | `npx vitest run src/__tests__/Canvas2DRenderer.test.ts` | ❌ W0 | ⬜ pending |
+| 1-02-01 | 02 | 2 | REND-03 | — | N/A | unit | `npx tsc --noEmit src/renderer/Renderer.ts src/renderer/Canvas2DRenderer.ts src/characters/draw.ts src/game/Background.ts` | ✅ | ⬜ pending |
+| 1-02-02 | 02 | 2 | REND-03 | — | N/A | unit | `npx tsc --noEmit src/renderer/Renderer.ts src/renderer/Canvas2DRenderer.ts src/characters/draw.ts src/game/Background.ts src/game/OddbodChaser.ts src/game/ZombieChaser.ts src/game/FloatingLetter.ts src/game/Collectible.ts` | ✅ | ⬜ pending |
+| 1-03-01 | 03 | 3 | REND-04 | — | N/A | unit | `npx tsc --noEmit src/renderer/Renderer.ts src/renderer/Canvas2DRenderer.ts src/game/GameModeStrategy.ts src/game/adapters/SelfContainedAdapter.ts src/game/strategies/LetterPopCore.ts src/game/strategies/LetterPopMode.ts` | ✅ | ⬜ pending |
+| 1-03-02 | 03 | 3 | REND-04 | — | N/A | unit | `npm run lint && npx vitest run src/__tests__/LetterPopCore.test.ts` | ✅ | ⬜ pending |
+| 1-03-03 | 03 | 3 | REND-04 | — | N/A | integration | `npm run lint && npm test && npm run test:smoke` | ✅ | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -50,7 +52,7 @@ created: 2026-06-07
 
 ## Wave 0 Requirements
 
-- [ ] `src/__tests__/Canvas2DRenderer.test.ts` — stubs for testing the Canvas2DRenderer implementation.
+Existing infrastructure covers all phase requirements.
 
 ---
 
