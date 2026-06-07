@@ -33,8 +33,9 @@ export default function AIPromptCreator({ onStartGame, onClose }: AIPromptCreato
     localStorage.setItem('gemini_api_key', val)
   }
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return
+  const handleGenerate = async (overridePrompt?: string) => {
+    const activePrompt = overridePrompt !== undefined ? overridePrompt : prompt
+    if (!activePrompt.trim()) return
 
     setLoading(true)
     setGeneratedConfig(null)
@@ -60,7 +61,7 @@ export default function AIPromptCreator({ onStartGame, onClose }: AIPromptCreato
     }, 700)
 
     try {
-      const config = await generateGeminiConfig(prompt, apiKey)
+      const config = await generateGeminiConfig(activePrompt, apiKey)
       
       // Ensure the loading sequence finishes or waits at least 2.5 seconds
       setTimeout(() => {
@@ -201,6 +202,31 @@ export default function AIPromptCreator({ onStartGame, onClose }: AIPromptCreato
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Offline Compiler Cheat Sheet */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          borderRadius: 14,
+          padding: 14,
+          marginBottom: 24,
+          fontSize: 12,
+          lineHeight: 1.4,
+          color: '#8899bb'
+        }}>
+          <div style={{ fontWeight: 700, color: '#ffae00', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, letterSpacing: 0.5 }}>
+            💡 OFFLINE COMPILER GUIDE (NO API KEY)
+          </div>
+          <p style={{ margin: '0 0 8px 0', fontSize: 11, color: '#8899bb' }}>
+            When playing offline without an AI key, the compiler parses specific keywords in your prompt:
+          </p>
+          <ul style={{ margin: 0, paddingLeft: 16, fontSize: 11, color: '#ccc', display: 'flex', flexDirection: 'column', gap: 4, listStyleType: 'disc' }}>
+            <li><strong>Theme:</strong> Include <code>space</code>, <code>volcano</code>, <code>sea</code>/<code>underwater</code>, <code>candy</code>, <code>forest</code>/<code>garden</code>, or <code>desert</code>.</li>
+            <li><strong>Controls:</strong> Include <code>shoot</code>/<code>cannon</code> (shooter blaster) or <code>keyboard</code>/<code>type</code> (keyboard typing). Default is direct touch pop.</li>
+            <li><strong>Letters Pool:</strong> Include <code>vowels</code>, <code>consonants</code>, or write <code>spell CAT</code> / <code>word HELLO</code> to spell custom words.</li>
+            <li><strong>Difficulty & Lives:</strong> Include <code>fast</code>/<code>extreme</code> (1 life, fast speed) or <code>slow</code>/<code>easy</code> (5 lives, slow speed).</li>
+          </ul>
         </div>
 
         {/* API Key settings (collapsed toggle) */}
@@ -390,24 +416,44 @@ export default function AIPromptCreator({ onStartGame, onClose }: AIPromptCreato
                 </button>
               </>
             ) : (
-              <button
-                onClick={handleGenerate}
-                disabled={!prompt.trim()}
-                style={{
-                  width: '100%', padding: '16px 20px',
-                  fontSize: 15, fontWeight: 800,
-                  background: prompt.trim()
-                    ? 'linear-gradient(135deg, #ff7b00 0%, #ffae00 100%)'
-                    : 'rgba(255,255,255,0.06)',
-                  border: 'none', borderRadius: 14,
-                  color: prompt.trim() ? '#070915' : '#556688',
-                  cursor: prompt.trim() ? 'pointer' : 'not-allowed',
-                  boxShadow: prompt.trim() ? '0 0 20px rgba(255,174,0,0.3)' : 'none',
-                  transition: 'all 0.2s', letterSpacing: 0.5
-                }}
-              >
-                🚀 COMPILE GAME CODE
-              </button>
+              <div style={{ display: 'flex', gap: 12, width: '100%' }}>
+                <button
+                  onClick={() => handleGenerate()}
+                  disabled={!prompt.trim()}
+                  style={{
+                    flex: 2, padding: '16px 20px',
+                    fontSize: 15, fontWeight: 800,
+                    background: prompt.trim()
+                      ? 'linear-gradient(135deg, #ff7b00 0%, #ffae00 100%)'
+                      : 'rgba(255,255,255,0.06)',
+                    border: 'none', borderRadius: 14,
+                    color: prompt.trim() ? '#070915' : '#556688',
+                    cursor: prompt.trim() ? 'pointer' : 'not-allowed',
+                    boxShadow: prompt.trim() ? '0 0 20px rgba(255,174,0,0.3)' : 'none',
+                    transition: 'all 0.2s', letterSpacing: 0.5
+                  }}
+                >
+                  🚀 COMPILE GAME CODE
+                </button>
+                <button
+                  onClick={() => {
+                    setPrompt('random')
+                    handleGenerate('random')
+                  }}
+                  style={{
+                    flex: 1.2, padding: '16px 20px',
+                    fontSize: 15, fontWeight: 800,
+                    background: 'linear-gradient(135deg, #9b51e0 0%, #bb6bd9 100%)',
+                    border: 'none', borderRadius: 14,
+                    color: '#fff',
+                    cursor: 'pointer',
+                    boxShadow: '0 0 20px rgba(155,81,224,0.3)',
+                    transition: 'all 0.2s', letterSpacing: 0.5
+                  }}
+                >
+                  🎲 RANDOM GAME
+                </button>
+              </div>
             )}
           </div>
         )}

@@ -1,8 +1,62 @@
 import { DynamicGameConfig, generateLocalConfig } from './LocalGenerator'
 
+function mergeWithLocalHints(prompt: string, geminiConfig: DynamicGameConfig): DynamicGameConfig {
+  const localHints = generateLocalConfig(prompt)
+  const merged = structuredClone(geminiConfig)
+
+  merged.theme.background = localHints.theme.background
+  merged.theme.specialEffects = localHints.theme.specialEffects
+
+  if (localHints.letters.pool !== 'all' || localHints.letters.customLetters) {
+    merged.letters.pool = localHints.letters.pool
+    merged.letters.customLetters = localHints.letters.customLetters
+  }
+
+  merged.letters.behavior = localHints.letters.behavior
+  if (localHints.letters.gravity !== undefined) {
+    merged.letters.gravity = localHints.letters.gravity
+  }
+
+  const speedChanged = localHints.letters.minSpeed !== 1.0 || localHints.letters.maxSpeed !== 2.0
+  if (speedChanged) {
+    merged.letters.minSpeed = localHints.letters.minSpeed
+    merged.letters.maxSpeed = localHints.letters.maxSpeed
+  }
+
+  if (localHints.enemies.type !== geminiConfig.enemies.type) {
+    merged.enemies.type = localHints.enemies.type
+    merged.enemies.speed = localHints.enemies.speed
+    merged.enemies.spawnRate = localHints.enemies.spawnRate
+    merged.enemies.behavior = localHints.enemies.behavior
+    merged.enemies.clickToDestroy = localHints.enemies.clickToDestroy
+  }
+
+  merged.enemies.speed = localHints.enemies.speed
+  merged.enemies.spawnRate = localHints.enemies.spawnRate
+
+  merged.controls.interaction = localHints.controls.interaction
+  merged.controls.projectileType = localHints.controls.projectileType
+  if (localHints.controls.ammoCount !== undefined) {
+    merged.controls.ammoCount = localHints.controls.ammoCount
+  }
+  if (localHints.controls.reloadSpeed !== undefined) {
+    merged.controls.reloadSpeed = localHints.controls.reloadSpeed
+  }
+
+  if (localHints.rules.winCondition !== geminiConfig.rules.winCondition) {
+    merged.rules.winCondition = localHints.rules.winCondition
+    merged.rules.winThreshold = localHints.rules.winThreshold
+  }
+
+  if (localHints.rules.lives !== 3) {
+    merged.rules.lives = localHints.rules.lives
+  }
+
+  return merged
+}
+
 export async function generateGeminiConfig(prompt: string, apiKey?: string): Promise<DynamicGameConfig> {
   if (!apiKey) {
-    console.log('No Gemini API key provided. Using local parser fallback.')
     return generateLocalConfig(prompt)
   }
 
@@ -94,8 +148,7 @@ Be extremely creative, fitting the user's prompt request to these parameters. Ma
     }
 
     const parsedConfig = JSON.parse(text) as DynamicGameConfig
-    
-    // Validate config and apply basic defaults if fields are missing
+
     if (!parsedConfig.title) parsedConfig.title = 'AI Game Mode'
     if (!parsedConfig.instruction) parsedConfig.instruction = 'Pop the letters!'
     if (!parsedConfig.theme) parsedConfig.theme = { background: 'night_sky', specialEffects: 'stars' }
@@ -104,7 +157,7 @@ Be extremely creative, fitting the user's prompt request to these parameters. Ma
     if (!parsedConfig.controls) parsedConfig.controls = { interaction: 'tap' }
     if (!parsedConfig.rules) parsedConfig.rules = { winCondition: 'score', winThreshold: 20, lives: 3 }
 
-    return parsedConfig
+    return mergeWithLocalHints(prompt, parsedConfig)
   } catch (err) {
     console.error('Failed to generate game via Gemini API, using local parser fallback:', err)
     return generateLocalConfig(prompt)

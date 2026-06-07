@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": {
+      "/Users/rony/dev/abcgame/.opencode/gsd-core/*": "allow"
+    },
+    "external_directory": {
+      "/Users/rony/dev/abcgame/.opencode/gsd-core/*": "allow"
+    }
+  }
+}
