@@ -82,9 +82,7 @@ export interface Renderer {
     x: number,
     y: number,
     alive: boolean,
-    name: string,
-    bodyColor: string,
-    outlineColor: string,
+    design: { name: string; bodyColor: string; outlineColor: string },
     runFrame: number,
     hasCaught: boolean,
     catchTimer: number
@@ -93,11 +91,10 @@ export interface Renderer {
     x: number,
     y: number,
     alive: boolean,
-    name: string,
-    bodyColor: string,
-    outlineColor: string,
+    design: { name: string; bodyColor: string; outlineColor: string },
     runFrame: number,
     hasCaught: boolean,
     catchTimer: number
   ): void;
 }
+

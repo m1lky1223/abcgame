@@ -1,5 +1,7 @@
 import { CHARACTERS } from '../characters/data'
 import { drawCharacter } from '../characters/draw'
+import { Renderer } from '../renderer/Renderer'
+
 
 interface Particle {
   x: number
@@ -89,7 +91,7 @@ export class FloatingLetter {
     return false
   }
 
-  draw(ctx: CanvasRenderingContext2D, frame: number): void {
+  draw(ctx: Renderer, frame: number): void {
     if (!this.collected) {
       const bob = Math.sin((frame + this.bobPhase) * 0.03) * 18
       const pulse = this.correctPulse > 0 ? 1 + Math.sin(this.correctPulse * 0.3) * 0.1 : 0

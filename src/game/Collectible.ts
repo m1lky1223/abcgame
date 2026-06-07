@@ -1,5 +1,7 @@
 import { ALL_LETTERS } from '../characters/data'
 import { drawCharacter } from '../characters/draw'
+import { Renderer } from '../renderer/Renderer'
+
 
 export class Collectible {
   x: number
@@ -23,7 +25,7 @@ export class Collectible {
     return this.x < -50 || this.collected
   }
 
-  draw(ctx: CanvasRenderingContext2D, frame: number): void {
+  draw(ctx: Renderer, frame: number): void {
     if (this.collected) return
     const bob = Math.sin(frame * 0.08) * 4
     drawCharacter(ctx, this.letter, this.x, this.y, 0.7, bob)

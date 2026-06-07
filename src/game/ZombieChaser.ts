@@ -1,4 +1,6 @@
 import { FloatingLetter } from './FloatingLetter'
+import { Renderer } from '../renderer/Renderer'
+
 
 interface ZombieDesign {
   name: string
@@ -121,85 +123,18 @@ export class ZombieChaser {
     return null
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(renderer: Renderer): void {
     if (!this.alive) return
     const design = ZOMBIES[this.designIndex]
-    const r = 20
-    const cx = this.x + r
-    const cy = this.y + r
-
-    const wobble = Math.sin(this.runFrame * 0.2) * 2
-    const tilt = Math.sin(this.runFrame * 0.08) * 0.03
-
-    ctx.save()
-    ctx.translate(cx + wobble, cy + Math.sin(this.runFrame * 0.15) * 1)
-    ctx.rotate(tilt)
-
-    ctx.shadowColor = design.outlineColor
-    ctx.shadowBlur = r * 0.15
-    ctx.fillStyle = design.bodyColor
-    ctx.beginPath()
-    ctx.arc(0, 0, r, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.shadowBlur = 0
-
-    ctx.strokeStyle = design.outlineColor
-    ctx.lineWidth = Math.max(2, r * 0.08)
-    ctx.lineJoin = 'round'
-    ctx.beginPath()
-    ctx.arc(0, 0, r, 0, Math.PI * 2)
-    ctx.stroke()
-
-    ctx.fillStyle = design.bodyColor
-    ctx.beginPath()
-    ctx.arc(0, 0, r, 0, Math.PI * 2)
-    ctx.fill()
-
-    drawZombieFeature(ctx, design.name, r)
-
-    const eyeR = r * 0.16
-    const eyeY = -r * 0.1
-    const spacing = r * 0.14
-
-    for (const side of [-1, 1]) {
-      const ex = side * spacing
-      ctx.beginPath()
-      ctx.arc(ex, eyeY, eyeR, 0, Math.PI * 2)
-      ctx.fillStyle = '#ccd'
-      ctx.fill()
-      ctx.beginPath()
-      ctx.arc(ex, eyeY, r * 0.08, 0, Math.PI * 2)
-      ctx.fillStyle = '#cc2222'
-      ctx.fill()
-      ctx.beginPath()
-      ctx.arc(ex + side * 1, eyeY - 1, 1, 0, Math.PI * 2)
-      ctx.fillStyle = '#222'
-      ctx.fill()
-    }
-
-    const smY = r * 0.22
-    const smW = r * 0.1
-    ctx.strokeStyle = '#222'
-    ctx.lineWidth = 1.2
-    ctx.lineCap = 'round'
-    ctx.beginPath()
-    ctx.arc(0, smY, smW, 0.4, Math.PI - 0.4)
-    ctx.stroke()
-
-    ctx.fillStyle = '#fff'
-    ctx.beginPath()
-    ctx.rect(-1, smY - 1, 2, 2.5)
-    ctx.fill()
-
-    if (this.caughtLetter) {
-      const alpha = Math.max(0, 1 - this.catchTimer / 20)
-      ctx.fillStyle = `rgba(0,0,0,${alpha * 0.3})`
-      ctx.beginPath()
-      ctx.arc(0, 0, r * 1.2, 0, Math.PI * 2)
-      ctx.fill()
-    }
-
-    ctx.restore()
+    renderer.drawZombieChaser(
+      this.x,
+      this.y,
+      this.alive,
+      design,
+      this.runFrame,
+      this.caughtLetter !== null,
+      this.catchTimer
+    )
   }
 
   containsPoint(mx: number, my: number): boolean {
@@ -212,88 +147,5 @@ export class ZombieChaser {
 
   get isDone(): boolean {
     return !this.alive
-  }
-}
-
-function drawZombieFeature(
-  ctx: CanvasRenderingContext2D,
-  name: string,
-  r: number,
-): void {
-  ctx.strokeStyle = '#222'
-  ctx.lineWidth = 1
-  ctx.lineCap = 'round'
-
-  switch (name) {
-    case 'classic':
-      ctx.beginPath()
-      ctx.moveTo(-r * 0.15, -r * 0.9)
-      ctx.lineTo(r * 0.15, -r * 0.7)
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.moveTo(-r * 0.1, -r * 0.75)
-      ctx.lineTo(r * 0.1, -r * 0.55)
-      ctx.stroke()
-      break
-
-    case 'decayed':
-      ctx.beginPath()
-      ctx.arc(-r * 0.4, -r * 0.4, r * 0.08, 0, Math.PI * 2)
-      ctx.fillStyle = '#222'
-      ctx.fill()
-      break
-
-    case 'toxic':
-      ctx.fillStyle = '#88FF88'
-      ctx.beginPath()
-      ctx.arc(0, -r * 0.9, r * 0.06, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.fillStyle = '#44FF44'
-      ctx.beginPath()
-      ctx.arc(0, -r * 0.9, r * 0.03, 0, Math.PI * 2)
-      ctx.fill()
-      break
-
-    case 'undead':
-      ctx.fillStyle = '#ccc'
-      ctx.globalAlpha = 0.5
-      for (let i = -1; i <= 1; i++) {
-        ctx.beginPath()
-        ctx.arc(i * r * 0.2, -r * 0.6, r * 0.08, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      ctx.globalAlpha = 1
-      break
-
-    case 'rotten':
-      ctx.beginPath()
-      ctx.arc(r * 0.35, -r * 0.35, r * 0.06, 0, Math.PI * 2)
-      ctx.fillStyle = '#444'
-      ctx.fill()
-      break
-
-    case 'ghoul':
-      ctx.strokeStyle = '#222'
-      ctx.lineWidth = 1.5
-      ctx.beginPath()
-      ctx.moveTo(-r * 0.2, -r * 0.85)
-      ctx.lineTo(0, -r * 1.0)
-      ctx.lineTo(r * 0.2, -r * 0.85)
-      ctx.stroke()
-      break
-
-    case 'mutant':
-      ctx.beginPath()
-      ctx.arc(r * 0.1, -r * 0.3, r * 0.06, 0, Math.PI * 2)
-      ctx.fillStyle = '#ccd'
-      ctx.fill()
-      ctx.strokeStyle = '#222'
-      ctx.lineWidth = 0.8
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.arc(r * 0.1, -r * 0.3, r * 0.03, 0, Math.PI * 2)
-      ctx.fillStyle = '#cc2222'
-      ctx.fill()
-      break
   }
 }
