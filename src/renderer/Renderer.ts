@@ -77,7 +77,7 @@ export interface Renderer {
 
   // High-level operations
   drawLetter(letter: string, x: number, y: number, scale?: number, bobOffset?: number): void;
-  drawBackground(clouds: CloudData[], sparkles: SparkleData[], frame: number): void;
+  drawBackground(clouds: CloudData[], sparkles: SparkleData[], canvasW: number, canvasH: number, frame: number): void;
   drawOddbodChaser(
     x: number,
     y: number,

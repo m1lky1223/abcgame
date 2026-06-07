@@ -8,6 +8,8 @@ import {
   TextAlign,
   TextBaseline,
 } from './Renderer';
+import { CHARACTERS } from '../characters/data';
+
 
 export class Canvas2DRenderer implements Renderer {
   private ctx: CanvasRenderingContext2D;
@@ -266,9 +268,54 @@ export class Canvas2DRenderer implements Renderer {
   }
 
   // Stubs for high-level operations to be implemented in subsequent phases/tasks
-  drawLetter(_letter: string, _x: number, _y: number, _scale?: number, _bobOffset?: number): void {}
+  drawLetter(letter: string, x: number, y: number, scale?: number, bobOffset?: number): void {
+    const def = CHARACTERS[letter]
+    if (!def) return
 
-  drawBackground(_clouds: CloudData[], _sparkles: SparkleData[], _frame: number): void {}
+    const s = scale ?? 1
+    const fontSize = 56 * s
+    const cx = x + 24 * s
+    const cy = y + 28 * s + (bobOffset ?? 0)
+
+    drawLetterBody(this.ctx, def.letter, cx, cy, fontSize, def.bodyColor, def.outlineColor)
+    drawEyes(this.ctx, def, cx, cy, fontSize, s)
+  }
+
+  drawBackground(clouds: CloudData[], sparkles: SparkleData[], canvasW: number, canvasH: number, frame: number): void {
+    const ctx = this.ctx
+    const grad = ctx.createLinearGradient(0, 0, 0, canvasH)
+    grad.addColorStop(0, '#1a1a3e')
+    grad.addColorStop(0.3, '#2d2d6b')
+    grad.addColorStop(0.6, '#4a3f7a')
+    grad.addColorStop(1, '#2a1a3e')
+    ctx.fillStyle = grad
+    ctx.fillRect(0, 0, canvasW, canvasH)
+
+    for (const s of sparkles) {
+      const flicker = Math.sin(frame * 0.05 + s.phase) * 0.4 + 0.6
+      ctx.globalAlpha = flicker * 0.5
+      ctx.fillStyle = '#fff'
+      ctx.beginPath()
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    ctx.globalAlpha = 1
+
+    for (const c of clouds) {
+      ctx.globalAlpha = c.a
+      ctx.fillStyle = '#8899cc'
+      ctx.beginPath()
+      ctx.ellipse(c.x, c.y, c.w / 2, 14, 0, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.ellipse(c.x - c.w * 0.25, c.y + 4, c.w * 0.3, 10, 0, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.ellipse(c.x + c.w * 0.25, c.y + 3, c.w * 0.3, 11, 0, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    ctx.globalAlpha = 1
+  }
 
   drawOddbodChaser(
     _x: number,
@@ -294,3 +341,136 @@ export class Canvas2DRenderer implements Renderer {
     _catchTimer: number
   ): void {}
 }
+
+const EYE_RADIUS = 5;
+const PUPIL_RADIUS = 2.5;
+
+function drawLetterBody(
+  ctx: CanvasRenderingContext2D,
+  letter: string,
+  cx: number,
+  cy: number,
+  fontSize: number,
+  bodyColor: string,
+  outlineColor: string,
+): void {
+  ctx.save();
+  ctx.font = `bold ${fontSize}px "Arial Black", Arial, system-ui, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.strokeStyle = outlineColor;
+  ctx.lineWidth = Math.max(3, fontSize / 18);
+  ctx.strokeText(letter, cx, cy);
+
+  ctx.fillStyle = bodyColor;
+  ctx.fillText(letter, cx, cy);
+
+  ctx.restore();
+}
+
+function drawEyes(
+  ctx: CanvasRenderingContext2D,
+  def: { letter: string; eyeWhiteColor: string; pupilColor: string; eyelidColor?: string },
+  cx: number,
+  cy: number,
+  fontSize: number,
+  s: number,
+): void {
+  const eyeR = EYE_RADIUS * s;
+  const pupilR = PUPIL_RADIUS * s;
+  const eyeY = cy - fontSize * 0.22;
+
+  const hasTwoEyes = !['O', 'R', 'K'].includes(def.letter);
+
+  if (def.letter === 'K') {
+    drawCompoundEyes(ctx, cx, cy, fontSize, s);
+    return;
+  }
+
+  if (!hasTwoEyes) {
+    drawSingleEye(ctx, cx, eyeY, eyeR, pupilR, def.eyeWhiteColor, def.pupilColor, def.eyelidColor);
+    return;
+  }
+
+  const spacing = fontSize * 0.15;
+  drawPairEyes(ctx, cx, eyeY, spacing, eyeR, pupilR, def.eyeWhiteColor, def.pupilColor, def.eyelidColor);
+}
+
+function drawPairEyes(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  eyeY: number,
+  spacing: number,
+  eyeR: number,
+  pupilR: number,
+  whiteColor: string,
+  pupilColor: string,
+  eyelidColor?: string,
+): void {
+  for (const side of [-1, 1]) {
+    const ex = cx + side * spacing;
+
+    if (eyelidColor) {
+      ctx.fillStyle = eyelidColor;
+      ctx.fillRect(ex - eyeR - 1, eyeY - eyeR - 4, eyeR * 2 + 2, eyeR + 3);
+    }
+
+    ctx.beginPath();
+    ctx.arc(ex, eyeY, eyeR, 0, Math.PI * 2);
+    ctx.fillStyle = whiteColor;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(ex + 0.5, eyeY, pupilR, 0, Math.PI * 2);
+    ctx.fillStyle = pupilColor;
+    ctx.fill();
+  }
+}
+
+function drawSingleEye(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  eyeY: number,
+  eyeR: number,
+  pupilR: number,
+  whiteColor: string,
+  pupilColor: string,
+  eyelidColor?: string,
+): void {
+  if (eyelidColor) {
+    ctx.fillStyle = eyelidColor;
+    ctx.fillRect(cx - eyeR - 1, eyeY - eyeR - 4, eyeR * 2 + 2, eyeR + 3);
+  }
+
+  ctx.beginPath();
+  ctx.arc(cx, eyeY, eyeR, 0, Math.PI * 2);
+  ctx.fillStyle = whiteColor;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx + 0.5, eyeY, pupilR, 0, Math.PI * 2);
+  ctx.fillStyle = pupilColor;
+  ctx.fill();
+}
+
+function drawCompoundEyes(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  fontSize: number,
+  s: number,
+): void {
+  const count = 4;
+  const spread = fontSize * 0.08;
+  const yBase = cy - fontSize * 0.22;
+
+  for (let i = 0; i < count; i++) {
+    const ox = (i - (count - 1) / 2) * spread;
+    ctx.beginPath();
+    ctx.arc(cx + ox, yBase, 2.5 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#141414';
+    ctx.fill();
+  }
+}
+
